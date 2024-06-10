@@ -34,7 +34,7 @@ public class UserDTO {
     @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
     private String image;
     
-    @Schema(description = "User Type", example = "user ; admin ; manager", type = "Enum")
+    @Schema(description = "User Typeer", example = "user ; admin ; manager", type = "Enum")
     @Enumerated(EnumType.STRING)
     private User.UserType user_type = User.UserType.USER;
 
