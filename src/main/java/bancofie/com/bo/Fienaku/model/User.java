@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,13 +48,16 @@ public class User implements Serializable {
     private String mail;
 
     @NotBlank
-    @Schema(description = "Password", example = "123asd123", type = "String")
+    @Schema(description = "Password", example = "123", type = "String")
     private String password;
 
     @NotBlank
     @Schema(description = "Account_Fie", example = "11515143", type = "int")
     private int account_fie;
 
+    @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
+    private String image;
+    
     @Schema(description = "User Type", example = "user ; admin ; manager", type = "Enum")
     @Enumerated(EnumType.STRING)
     private UserType user_type = UserType.USER;
@@ -71,12 +75,12 @@ public class User implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_at")
     private Date updatedAt;
-
+  
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
     }
-
+    
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = new Date();
@@ -90,8 +94,8 @@ public class User implements Serializable {
 
     public enum Status {
         ACTIVE,
-        SUSPENDED
-    }
+        SUSPENDED;
+    }     
     
     private static final long serialVersionUID = 1285454306356845809L;
 }

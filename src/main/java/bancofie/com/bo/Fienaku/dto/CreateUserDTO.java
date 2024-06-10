@@ -13,11 +13,9 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+public class CreateUserDTO {
+
 @Getter @Setter
-public class UserDTO {    
-    
-    @Schema(description = "User DTO", example = "1", type = "long")
-    private long id;
     
     @NotBlank
     @Schema(description = "Name", example = "juan", type = "String")
@@ -55,14 +53,5 @@ public class UserDTO {
         this.updatedAt = new Date();
     }
 
-    public enum UserType {
-        USER,
-        ADMIN,
-        MANAGER
-    }
-
-    public enum Status {
-        ACTIVE,
-        SUSPENDED
-    }    
+    
 }
