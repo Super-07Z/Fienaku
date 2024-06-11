@@ -44,7 +44,7 @@ public class User implements Serializable {
     private String lastname;
 
     @NotBlank
-    @Schema(description = "Mail", example = "juan@email.com", type = "String")
+    @Schema(description = "EMail", example = "juan@email.com", type = "String")
     private String mail;
 
     @NotBlank
