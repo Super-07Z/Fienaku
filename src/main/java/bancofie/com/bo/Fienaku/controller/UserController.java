@@ -12,7 +12,7 @@ import bancofie.com.bo.Fienaku.model.User;
 import bancofie.com.bo.Fienaku.model.UserRepository;
 import bancofie.com.bo.Fienaku.error.ApiError;
 import bancofie.com.bo.Fienaku.error.UserNotFoundException;
-import bancofie.com.bo.Fienaku.dto.CreateUserDTO;
+import bancofie.com.bo.Fienaku.upload.StorageService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 public class UserController {
 
     private final UserRepository userRepository;
+    private final StorageService storageService;
     
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "OK", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = User.class))),
@@ -58,5 +59,25 @@ public class UserController {
         }
     } 
 
-   
+    @Operation(summary="Create user")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) 
+        public ResponseEntity<?> newUser(@RequestPart("user") User user, @RequestPart("file") MultipartFile file) {
+        String urlImagen = null;
+
+        if (!file.isEmpty()) {
+            String imagen = storageService.store(file);
+            urlImagen = MvcUriComponentsBuilder.fromMethodName(StorageController.class, "serveFile", imagen, null).build().toUriString();
+        }
+        
+        User newUser = new User();
+        newUser.setName(user.getName());
+        newUser.setLastname(user.getLastname());
+        newUser.setMail(user.getMail());
+        newUser.setPassword(user.getPassword());
+        newUser.setImage(urlImagen);                        
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(newUser));
+    }
+    
+    
 }

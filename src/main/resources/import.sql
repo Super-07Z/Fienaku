@@ -16,3 +16,4 @@ INSERT INTO USER (name, lastname, mail, password, account_fie, create_at, update
 INSERT INTO USER (name, lastname, mail, password, account_fie, create_at, update_at) VALUES ('Usuario2', 'Apellido2', 'usuario2@correo.com', '123', 666666, NOW(), NOW());
 INSERT INTO USER (name, lastname, mail, password, account_fie, create_at, update_at) VALUES ('Usuario3', 'Apellido3', 'usuario3@correo.com', '123', 777777, NOW(), NOW());
 INSERT INTO USER (name, lastname, mail, password, account_fie, create_at, update_at) VALUES ('Usuario4', 'Apellido4', 'usuario4@correo.com', '123', 888888, NOW(), NOW());
+
