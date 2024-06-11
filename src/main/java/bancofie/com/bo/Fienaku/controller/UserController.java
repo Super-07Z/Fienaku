@@ -48,6 +48,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving users");
         }
     }
+    
     @Operation(summary = "List a user")
     @PostMapping("/user/{id}")
     public User getOne(@PathVariable Long id) {
@@ -57,16 +58,15 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
+    
     @Operation(summary = "Create User")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> newUser(@RequestPart("user") User user, @RequestPart("file") MultipartFile file) {
         String urlImagen = null;
-
         if (!file.isEmpty()) {
             String imagen = storageService.store(file);
             urlImagen = MvcUriComponentsBuilder.fromMethodName(StorageController.class, "serveFile", imagen, null).build().toUriString();
         }
-
         User newUser = new User();
         newUser.setName(user.getName());
         newUser.setLastname(user.getLastname());
@@ -76,6 +76,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(newUser));
     }
+    
     @Operation(summary = "Edit User")
     @PostMapping("/edit/{id}")
     public User editUser(@RequestBody User edit, @PathVariable Long id) {
@@ -87,6 +88,7 @@ public class UserController {
             return userRepository.save(p);
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
+    
     @Operation(summary = "Delete User")
     @PostMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
