@@ -34,6 +34,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/manager").hasRole("MANAGER")
                 .antMatchers("/user").hasRole("USER")
+                .antMatchers("/fienaku/create").hasRole("USER")
                 .antMatchers("/homes").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .and().formLogin();

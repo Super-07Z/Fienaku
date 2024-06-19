@@ -1,8 +1,12 @@
 package bancofie.com.bo.fienaku.controller;
 
+import bancofie.com.bo.fienaku.dto.fienakuDTO;
 import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.model.fienaku;
+import bancofie.com.bo.fienaku.model.user;
+import bancofie.com.bo.fienaku.model.userType;
 import bancofie.com.bo.fienaku.repository.fienakuRepository;
+import bancofie.com.bo.fienaku.repository.userRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,16 +15,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 public class fienakuController {
     
-private final fienakuRepository fienakuRepository;
+    @Autowired
+    private final fienakuRepository fienaxRepository;
 
     @Autowired
-    public fienakuController(fienakuRepository fienakuRepository) {
-        this.fienakuRepository = fienakuRepository;
+    private final userRepository usersRepository;
+
+    public fienakuController(fienakuRepository fienakuRepository, userRepository usersRepository) {
+        this.fienaxRepository = fienakuRepository;
+        this.usersRepository = usersRepository;
     }
+    
     
     @Operation(summary = "get list of all Fienakus")
     @ApiResponses(value = {
@@ -31,8 +44,31 @@ private final fienakuRepository fienakuRepository;
 
     @GetMapping("/fienaku")
     public List<fienaku> getAllFienakus() {
-        return fienakuRepository.findAll();
+        return fienaxRepository.findAll();
     }
     
+    @GetMapping("/fienaku/create")
+    public fienaku createFienakuDTO(@RequestBody fienakuDTO fienakudto) {
+        fienaku fienax = new fienaku();
+        fienax.setName(fienakudto.getName());
+        fienax.setCode(fienakudto.getCode());
+        fienax.setMount(fienakudto.getMount());
+        fienax.setPenitence(fienakudto.getPenitence());
+        fienax.setTimespan(fienakudto.getTimespan());
+        fienax.setCreate(fienakudto.getCreate());
+        fienax.setUpdate(fienakudto.getUpdate());
+
+        fienaku fienakusave = fienaxRepository.save(fienax);
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        user userManager = usersRepository.findByMail(username);
+
+        userManager.setUsertype(userType.ROLE_MANAGER);
+        usersRepository.save(userManager);
+
+        return fienakusave;
+    }
+
 
 }
