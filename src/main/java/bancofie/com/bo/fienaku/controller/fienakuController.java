@@ -11,7 +11,6 @@ import bancofie.com.bo.fienaku.repository.userRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+@RequestMapping("/fienaku")
 @RestController
 public class fienakuController {
     
@@ -42,12 +43,12 @@ public class fienakuController {
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class)))
     })
 
-    @GetMapping("/fienaku")
+    @PostMapping()
     public List<fienaku> getAllFienakus() {
         return fienaxRepository.findAll();
     }
     
-    @GetMapping("/fienaku/create")
+    @PostMapping("/create")
     public fienaku createFienakuDTO(@RequestBody fienakuDTO fienakudto) {
         fienaku fienax = new fienaku();
         fienax.setName(fienakudto.getName());

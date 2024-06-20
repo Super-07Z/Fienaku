@@ -21,24 +21,20 @@ public class fienaku implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @NotBlank
+
     @Schema(description = "Fienaku Name", example = "Equipo Azul", type="String")
     private String name;
 
     @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
     private String image;
-    
-    @NotBlank
+
     @Schema(description = "Code Fienaku", example = "3CD7O", type="String")
     @Column(unique=true, length = 60)
     private String code;
-          
-    @NotBlank
+
     @Schema(description = "Mount Payment", example = "100.00 Bs.-", type = "double")
     private double mount;
 
-    @NotBlank
     @Schema(description = "Penitence Fienaku", example = "10.00 Bs.-", type = "double")
     private double penitence;
     
