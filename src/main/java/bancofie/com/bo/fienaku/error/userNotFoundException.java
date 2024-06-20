@@ -10,7 +10,7 @@ public class userNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 43876691117560211L;
 
     public userNotFoundException(Long id) {
-        super("Cannot find product with ID: " + id);
+        super("Cannot find user with ID: " + id);
     }
 
 }

@@ -57,14 +57,14 @@ public class fienaku implements Serializable {
     @ManyToMany(mappedBy = "fienaku")
     private List<user> users = new ArrayList<>();
 
-    public void addUser(user user) {
-        this.users.add(user);
-        user.getFienaku().add(this); 
+    public void addUser(user data) {
+        this.users.add(data);
+        data.getFienaku().add(this); 
     }
 
-    public void removeUser(user user) {
-        this.users.remove(user);
-        user.getFienaku().remove(this);
+    public void removeUser(user data) {
+        this.users.remove(data);
+        data.getFienaku().remove(this);
     }
     
     @PrePersist

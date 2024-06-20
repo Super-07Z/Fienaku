@@ -72,7 +72,7 @@ public class user implements Serializable, UserDetails {
         inverseJoinColumns = @JoinColumn(name = "fienaku_Id")
     )
     private List<fienaku> fienaku;
-        
+    
     @PrePersist
     public void prePersist() {
         this.create = new Date();
@@ -87,7 +87,7 @@ public class user implements Serializable, UserDetails {
         String roleName = this.usertype.name(); 
         return Collections.singleton(new SimpleGrantedAuthority(roleName));
     }
-
+    
     @Override
     public String getUsername() {
         return this.mail;
