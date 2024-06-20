@@ -21,6 +21,9 @@ public class fienakuDTO {
     @Schema(description = "Name fienaku DTO", example = "Equipo azul", type = "String")    
     private String name;
     
+    @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
+    private String image;
+    
     @Schema(description = "Code Fienaku", example = "3CD7O", type="String")
     @Column(unique=true, length = 60)
     private String code;

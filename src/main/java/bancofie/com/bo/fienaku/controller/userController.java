@@ -29,7 +29,7 @@ public class userController {
     })
     
     @Operation(summary = "List Users")
-    @PostMapping()
+    @PostMapping("/all")
     public List<user> getAll() {
         try {
             return userRepository.findAll();
@@ -50,23 +50,30 @@ public class userController {
     
     @Operation(summary = "Create User")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> newUser(@RequestPart("user") user user, @RequestPart("file") MultipartFile file) {
-        String urlImagen = null;
-        if (!file.isEmpty()) {
-            String imagen = storageService.store(file);
-            urlImagen = MvcUriComponentsBuilder.fromMethodName(storageController.class, "serveFile", imagen, null).build().toUriString();
+    public ResponseEntity<?> newUser(@ModelAttribute user user, @RequestParam("file") MultipartFile file) {
+        try {
+            String urlImagen = null;
+            if (!file.isEmpty()) {
+                String imagen = storageService.store(file);
+                urlImagen = MvcUriComponentsBuilder.fromMethodName(storageController.class, "serveFile", imagen, null).build().toUriString();
+            }
+
+            user newUser = new user();
+            newUser.setName(user.getName());
+            newUser.setLastname(user.getLastname());
+            newUser.setMail(user.getMail());
+            newUser.setPassword(user.getPassword());
+            newUser.setAccount(user.getAccount());
+            newUser.setImage(urlImagen);
+            newUser.setUsertype(user.getUsertype());
+
+            user savedUser = userRepository.save(newUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario: " + e.getMessage());
         }
-        user newUser = new user();
-        newUser.setName(user.getName());
-        newUser.setLastname(user.getLastname());
-        newUser.setMail(user.getMail());
-        newUser.setPassword(user.getPassword());
-        newUser.setAccount(user.getAccount());
-        newUser.setImage(urlImagen);
-        newUser.setUsertype(user.getUsertype());
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(newUser));
     }
-    
+
     @Operation(summary = "Edit User")
     @PostMapping("/edit/{id}")
     public user editUser(@RequestBody user edit, @PathVariable Long id) {
