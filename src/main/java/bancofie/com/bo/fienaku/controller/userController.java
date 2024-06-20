@@ -1,5 +1,7 @@
 package bancofie.com.bo.fienaku.controller;
 
+import java.util.List;
+
 import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.error.userNotFoundException;
 import bancofie.com.bo.fienaku.model.user;
@@ -22,11 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
 import bancofie.com.bo.fienaku.repository.userRepository;
 import bancofie.com.bo.fienaku.upload.storageService;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+@RequestMapping("/user")
 @RestController
 @RequiredArgsConstructor
 public class userController {
@@ -41,7 +43,7 @@ public class userController {
     })
     
     @Operation(summary = "List Users")
-    @PostMapping("/user")
+    @PostMapping()
     public List<user> getAll() {
         try {
             return userRepository.findAll();
@@ -51,7 +53,7 @@ public class userController {
     }
     
     @Operation(summary = "List a user")
-    @PostMapping("/user/{id}")
+    @PostMapping("/{id}")
     public user getOne(@PathVariable Long id) {
         try {
             return userRepository.findById(id).orElseThrow(() -> new userNotFoundException(id));
@@ -61,7 +63,7 @@ public class userController {
     }
     
     @Operation(summary = "Create User")
-    @PostMapping(value = "/user/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> newUser(@RequestPart("user") user user, @RequestPart("file") MultipartFile file) {
         String urlImagen = null;
         if (!file.isEmpty()) {
@@ -80,7 +82,7 @@ public class userController {
     }
     
     @Operation(summary = "Edit User")
-    @PostMapping("/user/edit/{id}")
+    @PostMapping("/edit/{id}")
     public user editUser(@RequestBody user edit, @PathVariable Long id) {
         return userRepository.findById(id).map(p -> {
             p.setName(edit.getName());
@@ -93,30 +95,10 @@ public class userController {
     }
     
     @Operation(summary = "Delete User")
-    @PostMapping("/user/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         user user = userRepository.findById(id).orElseThrow(() -> new userNotFoundException(id));
         userRepository.delete(user);
         return ResponseEntity.noContent().build();
     }    
-    
-    @GetMapping("/homes")
-    public String welcome() {
-        return ("<h1>Welcome</h1>");
-    }
-    
-    @GetMapping("/userr")
-    public String user() {
-        return ("<h1>Welcome user</h1>");
-    }
-    
-    @GetMapping("/admin")
-    public String admin() {
-        return ("<h1>Welcome admin</h1>");
-    }
-    
-    @GetMapping("/manager")
-    public String manager() {
-        return ("<h1>Welcome manager</h1>");
-    }
 }
