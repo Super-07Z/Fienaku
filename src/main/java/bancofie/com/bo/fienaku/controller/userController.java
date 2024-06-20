@@ -1,36 +1,22 @@
 package bancofie.com.bo.fienaku.controller;
-
 import java.util.List;
-
-import bancofie.com.bo.fienaku.error.apiError;
-import bancofie.com.bo.fienaku.error.userNotFoundException;
 import bancofie.com.bo.fienaku.model.user;
-
+import bancofie.com.bo.fienaku.upload.storageService;
+import bancofie.com.bo.fienaku.error.*;
+import bancofie.com.bo.fienaku.repository.userRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.responses.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import lombok.RequiredArgsConstructor;
 
-import bancofie.com.bo.fienaku.repository.userRepository;
-import bancofie.com.bo.fienaku.upload.storageService;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-@RequestMapping("/user")
 @RestController
+@RequestMapping("/user")
 @RequiredArgsConstructor
+
 public class userController {
     
     private final userRepository userRepository;

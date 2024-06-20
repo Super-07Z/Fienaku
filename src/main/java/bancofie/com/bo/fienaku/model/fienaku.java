@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 
@@ -22,12 +22,14 @@ public class fienaku implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Schema(description = "Fienaku Name", example = "Equipo Azul", type="String")
     private String name;
 
     @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
     private String image;
 
+    @NotBlank
     @Schema(description = "Code Fienaku", example = "3CD7O", type="String")
     @Column(unique=true, length = 60)
     private String code;
@@ -50,11 +52,21 @@ public class fienaku implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_At")
     private Date update;
-
+    
     @JsonManagedReference
     @ManyToMany(mappedBy = "fienaku")
-    private List<user> users;
+    private List<user> users = new ArrayList<>();
 
+    public void addUser(user user) {
+        this.users.add(user);
+        user.getFienaku().add(this); 
+    }
+
+    public void removeUser(user user) {
+        this.users.remove(user);
+        user.getFienaku().remove(this);
+    }
+    
     @PrePersist
     public void prePersist() {
         this.create = new Date();
