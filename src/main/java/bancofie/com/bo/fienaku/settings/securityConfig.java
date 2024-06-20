@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,15 +30,20 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/fienaku").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/manager").hasRole("MANAGER")
-                .antMatchers("/user").hasRole("USER")
-                .antMatchers("/fienaku/create").hasRole("USER")
-                .antMatchers("/homes").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .and().formLogin();
+        http 
+            .csrf().disable() 
+            .authorizeRequests()
+            .antMatchers(HttpMethod.POST, "/user").hasRole("USER")
+            .antMatchers("/fienaku").permitAll() 
+            .antMatchers("/admin").hasRole("ADMIN") 
+            .antMatchers("/manager").hasRole("MANAGER") 
+            .antMatchers("/swagger-ui.html").permitAll() 
+            .anyRequest().permitAll() 
+            .and().httpBasic() 
+            .and().formLogin()
+            .permitAll()
+            .and().logout()
+            .permitAll();
     }
 
     @Bean

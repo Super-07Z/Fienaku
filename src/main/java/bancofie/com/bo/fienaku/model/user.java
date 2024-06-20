@@ -40,7 +40,6 @@ public class user implements Serializable, UserDetails {
 
     @NotBlank
     @Schema(description = "Password", example = "123", type = "String")
-    @Column(length = 40)
     private String password;
 
     @Schema(description = "Account", example = "11515143", type = "Integer")
