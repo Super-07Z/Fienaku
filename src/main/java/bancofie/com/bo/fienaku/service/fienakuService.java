@@ -10,27 +10,32 @@ import javax.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-@RequiredArgsConstructor
-
 public class fienakuService {
 
-    private fienakuRepository repositoryFienaku;
-    private userRepository repositoryUser;
-    private storageService serviceStorage; 
+    private final fienakuRepository repositoryFienaku;
+    private final userRepository repositoryUser;
+    private final storageService serviceStorage;
+
+    @Autowired
+    public fienakuService(fienakuRepository repositoryFienaku, userRepository repositoryUser, storageService serviceStorage) {
+        this.repositoryFienaku = repositoryFienaku;
+        this.repositoryUser = repositoryUser;
+        this.serviceStorage = serviceStorage;
+    }
 
     public List<fienaku> getAll() {
         return repositoryFienaku.findAll();
     }
-        
+
     public fienaku getOne(Long id) {
         return repositoryFienaku.findById(id)
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
     }
-    
+
     @Transactional
     public fienaku create(fienakuDTO dto, MultipartFile file) throws IOException {
         fienaku data = new fienaku();
@@ -41,7 +46,7 @@ public class fienakuService {
         data.setTimespan(dto.getTimespan());
 
         if (file != null && !file.isEmpty()) {
-            String imageUrl = serviceStorage.store(file); 
+            String imageUrl = serviceStorage.store(file);
             data.setImage(imageUrl);
         }
 
@@ -51,15 +56,13 @@ public class fienakuService {
         String username = userDetails.getUsername();
         user userManager = repositoryUser.findByMail(username);
 
-        savedFienaku.addUser(userManager); 
-
+        savedFienaku.addUser(userManager);
         userManager.setUsertype(userType.ROLE_MANAGER);
-
         repositoryUser.save(userManager);
 
         return savedFienaku;
     }
-    
+
     public fienaku update(Long id, fienakuDTO dto) {
         fienaku update = repositoryFienaku.findById(id)
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
@@ -68,14 +71,10 @@ public class fienakuService {
         update.setMount(dto.getMount());
         update.setPenitence(dto.getPenitence());
         update.setTimespan(dto.getTimespan());
-
         return repositoryFienaku.save(update);
     }
 
     public void delete(Long id) {
-        fienaku existingFienaku = repositoryFienaku.findById(id)
-                .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
-
-        repositoryFienaku.delete(existingFienaku);
-    }    
+        repositoryFienaku.deleteById(id);
+    }
 }

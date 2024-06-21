@@ -2,6 +2,7 @@ package bancofie.com.bo.fienaku.settings;
 
 import bancofie.com.bo.fienaku.service.userDetailsServiceImpl;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,7 +37,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
             .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
             .antMatchers("/admin").hasRole("ADMIN") 
-            .antMatchers("/fienaku/**").hasRole("MANAGER") 
+            .antMatchers("/fienaku/all").permitAll() 
             .antMatchers("/swagger-ui.html").permitAll() 
             .anyRequest().permitAll() 
             .and().httpBasic() 

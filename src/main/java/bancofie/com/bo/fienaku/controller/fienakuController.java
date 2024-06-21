@@ -9,25 +9,24 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/fienaku")
 @RestController
-@RequiredArgsConstructor
 
 public class fienakuController {
 
-    private final fienakuService fienaxService;
+    private final fienakuService serviceFienaku;
 
+    @Autowired
+    public fienakuController(fienakuService serviceFienaku) {
+        this.serviceFienaku = serviceFienaku;
+    }
+    
     @Operation(summary = "get list of all Fienakus")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "OK", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = fienaku.class))),
@@ -37,28 +36,34 @@ public class fienakuController {
 
     @PostMapping("/all")
     public ResponseEntity<List<fienaku>> getAll() {
-        List<fienaku> allFienakus = fienaxService.getAll();
+        List<fienaku> allFienakus = serviceFienaku.getAll();
         return ResponseEntity.ok(allFienakus);
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<fienaku> getOne(@PathVariable Long id) {
+        fienaku fienaku = serviceFienaku.getOne(id);
+        return ResponseEntity.ok(fienaku);
+    }
+    
     @Operation(summary = "Delete Fienaku")    
     @PostMapping("/delete/{id}")
     public ResponseEntity<fienaku> delete(@PathVariable Long id) {
-        fienaxService.delete(id);
+        serviceFienaku.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Create Fienaku")
     @PostMapping("/create")
-    public ResponseEntity<fienaku> createDTO(@ModelAttribute fienakuDTO dto, @RequestParam("file") MultipartFile file) throws IOException {
-        fienaku createdFienaku = fienaxService.create(dto, file);
+    public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku createdFienaku = serviceFienaku.create(dto, file);
         return ResponseEntity.ok(createdFienaku);
     }
     
     @Operation(summary = "Update Fienaku")
     @PostMapping("/update/{id}")
     public ResponseEntity<fienaku> updateDTO(@PathVariable Long id, @RequestBody fienakuDTO dto) {
-        fienaku updatedFienaku = fienaxService.update(id, dto);
+        fienaku updatedFienaku = serviceFienaku.update(id, dto);
         return ResponseEntity.ok(updatedFienaku);
-    }    
+    } 
 }
