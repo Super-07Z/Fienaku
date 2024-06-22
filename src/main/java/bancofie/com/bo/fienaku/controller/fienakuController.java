@@ -54,7 +54,7 @@ public class fienakuController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Create Fienaku")
+    @Operation(summary = "Create a Fienaku and join the manager")
     @PostMapping("/create")
     public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku createdFienaku = serviceFienaku.create(dto, file);
