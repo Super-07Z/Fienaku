@@ -45,7 +45,8 @@ public class fienakuService {
         data.setPenitence(dto.getPenitence());
         data.setTimespan(dto.getTimespan());
 
-        if (file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty())
+        {
             String imageUrl = serviceStorage.store(file);
             data.setImage(imageUrl);
         }

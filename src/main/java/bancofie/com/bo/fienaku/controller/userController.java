@@ -1,4 +1,5 @@
 package bancofie.com.bo.fienaku.controller;
+
 import java.util.List;
 import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.upload.storageService;
@@ -18,42 +19,49 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 
 public class userController {
-    
+
     private final userRepository userRepository;
     private final storageService storageService;
-    
-    @ApiResponses(value = {
+
+    @ApiResponses(value =
+    {
         @ApiResponse(responseCode = "201", description = "OK", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = user.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class))),
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class)))
     })
-    
+
     @Operation(summary = "List Users")
     @PostMapping("/all")
     public List<user> getAll() {
-        try {
+        try
+        {
             return userRepository.findAll();
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error retrieving users");
         }
     }
-    
+
     @Operation(summary = "List a user")
     @PostMapping("/{id}")
     public user getOne(@PathVariable Long id) {
-        try {
+        try
+        {
             return userRepository.findById(id).orElseThrow(() -> new userNotFoundException(id));
-        } catch (userNotFoundException ex) {
+        } catch (userNotFoundException ex)
+        {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
-    
+
     @Operation(summary = "Create User")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> newUser(@ModelAttribute user user, @RequestParam("file") MultipartFile file) {
-        try {
+        try
+        {
             String urlImagen = null;
-            if (!file.isEmpty()) {
+            if (!file.isEmpty())
+            {
                 String imagen = storageService.store(file);
                 urlImagen = MvcUriComponentsBuilder.fromMethodName(storageController.class, "serveFile", imagen, null).build().toUriString();
             }
@@ -69,7 +77,8 @@ public class userController {
 
             user savedUser = userRepository.save(newUser);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario: " + e.getMessage());
         }
     }
@@ -77,7 +86,8 @@ public class userController {
     @Operation(summary = "Edit User")
     @PostMapping("/edit/{id}")
     public user editUser(@RequestBody user edit, @PathVariable Long id) {
-        return userRepository.findById(id).map(p -> {
+        return userRepository.findById(id).map(p ->
+        {
             p.setName(edit.getName());
             p.setLastname(edit.getLastname());
             p.setMail(edit.getMail());
@@ -86,12 +96,12 @@ public class userController {
             return userRepository.save(p);
         }).orElseThrow(() -> new userNotFoundException(id));
     }
-    
+
     @Operation(summary = "Delete User")
     @PostMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         user user = userRepository.findById(id).orElseThrow(() -> new userNotFoundException(id));
         userRepository.delete(user);
         return ResponseEntity.noContent().build();
-    }    
+    }
 }

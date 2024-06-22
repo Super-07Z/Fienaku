@@ -31,22 +31,27 @@ public class fileStorageService implements storageService {
         String extension = StringUtils.getFilenameExtension(filename);
         String justFilename = filename.replace("." + extension, "");
         String storedFilename = System.currentTimeMillis() + "_" + justFilename + "." + extension;
-        try {
-            if (file.isEmpty()) {
+        try
+        {
+            if (file.isEmpty())
+            {
                 throw new storageException("Failed to store empty file " + filename);
             }
-            if (filename.contains("..")) {
+            if (filename.contains(".."))
+            {
                 // This is a security check
                 throw new storageException(
                         "Cannot store file with relative path outside current directory "
                         + filename);
             }
-            try (InputStream inputStream = file.getInputStream()) {
+            try (InputStream inputStream = file.getInputStream())
+            {
                 Files.copy(inputStream, this.rootLocation.resolve(storedFilename),
                         StandardCopyOption.REPLACE_EXISTING);
                 return storedFilename;
             }
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new storageException("Failed to store file " + filename, e);
         }
 
@@ -54,11 +59,13 @@ public class fileStorageService implements storageService {
 
     @Override
     public Stream<Path> loadAll() {
-        try {
+        try
+        {
             return Files.walk(this.rootLocation, 1)
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new storageException("Failed to read stored files", e);
         }
 
@@ -71,17 +78,21 @@ public class fileStorageService implements storageService {
 
     @Override
     public Resource loadAsResource(String filename) {
-        try {
+        try
+        {
             Path file = load(filename);
             Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() || resource.isReadable())
+            {
                 return resource;
-            } else {
+            } else
+            {
                 throw new fileNotFoundException(
                         "Could not read file: " + filename);
 
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException e)
+        {
             throw new fileNotFoundException("Could not read file: " + filename, e);
         }
     }
@@ -93,9 +104,11 @@ public class fileStorageService implements storageService {
 
     @Override
     public void init() {
-        try {
+        try
+        {
             Files.createDirectories(rootLocation);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new storageException("Could not initialize storage", e);
         }
     }
@@ -103,10 +116,12 @@ public class fileStorageService implements storageService {
     @Override
     public void delete(String filename) {
         String justFilename = StringUtils.getFilename(filename);
-        try {
+        try
+        {
             Path file = load(justFilename);
             Files.deleteIfExists(file);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             throw new storageException("Error deleting a file", e);
         }
 

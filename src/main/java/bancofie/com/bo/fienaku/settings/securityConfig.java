@@ -2,7 +2,6 @@ package bancofie.com.bo.fienaku.settings;
 
 import bancofie.com.bo.fienaku.service.userDetailsServiceImpl;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,20 +30,20 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http 
-            .csrf().disable() 
-            .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
-            .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
-            .antMatchers("/admin").hasRole("ADMIN") 
-            .antMatchers("/fienaku/all").permitAll() 
-            .antMatchers("/swagger-ui.html").permitAll() 
-            .anyRequest().permitAll() 
-            .and().httpBasic() 
-            .and().formLogin()
-            .permitAll()
-            .and().logout()
-            .permitAll();
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/fienaku/all").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .anyRequest().permitAll()
+                .and().httpBasic()
+                .and().formLogin()
+                .permitAll()
+                .and().logout()
+                .permitAll();
     }
 
     @Bean

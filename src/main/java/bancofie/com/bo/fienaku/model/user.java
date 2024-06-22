@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 
 public class user implements Serializable, UserDetails {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "User ID", example = "1", type = "long")
     private Long id;
 
     @NotBlank
-    @Schema(description = "Name", example = "Juan", type = "String")    
+    @Schema(description = "Name", example = "Juan", type = "String")
     private String name;
 
     @NotBlank
@@ -35,7 +35,7 @@ public class user implements Serializable, UserDetails {
 
     @NotBlank
     @Schema(description = "Mail", example = "juan@email.com", type = "String")
-    @Column(unique=true, length = 60)
+    @Column(unique = true, length = 60)
     private String mail;
 
     @NotBlank
@@ -43,7 +43,7 @@ public class user implements Serializable, UserDetails {
     private String password;
 
     @Schema(description = "Account", example = "11515143", type = "Integer")
-    @Column(unique=true, length = 60)
+    @Column(unique = true, length = 60)
     private int account;
 
     @Schema(description = "User Image", example = "localhost:8080/img/img.png", type = "String")
@@ -53,7 +53,7 @@ public class user implements Serializable, UserDetails {
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "userType")
     private userType usertype;
-    
+
     @Schema(description = "Creation Date", example = "11-11-2011", type = "Date")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_At", nullable = false, updatable = false)
@@ -67,12 +67,12 @@ public class user implements Serializable, UserDetails {
     @JsonBackReference
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "fienaku_User",
-        joinColumns = @JoinColumn(name = "user_Id"),
-        inverseJoinColumns = @JoinColumn(name = "fienaku_Id")
+            name = "fienaku_User",
+            joinColumns = @JoinColumn(name = "user_Id"),
+            inverseJoinColumns = @JoinColumn(name = "fienaku_Id")
     )
     private List<fienaku> fienaku;
-    
+
     @PrePersist
     public void prePersist() {
         this.create = new Date();
@@ -82,12 +82,12 @@ public class user implements Serializable, UserDetails {
     public void preUpdate() {
         this.update = new Date();
     }
-    
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roleName = this.usertype.name(); 
+        String roleName = this.usertype.name();
         return Collections.singleton(new SimpleGrantedAuthority(roleName));
     }
-    
+
     @Override
     public String getUsername() {
         return this.mail;

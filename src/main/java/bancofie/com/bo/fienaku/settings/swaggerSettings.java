@@ -28,12 +28,12 @@ public class swaggerSettings {
         return new OpenAPI()
                 .components(new Components())
                 .info(
-                    new Info()
-                            .title("Proyecto Fienaku")
-                            .description("Desarrollado por el equipo azul, pasantes del Banco Fie S.A. en el área de ingeniería de sistemas\n\n" 
-                                    + members + 
-                                    "\n\n[repository](https://github.com/Super-07Z/Fienaku)")
-                            .version("1.0")
+                        new Info()
+                                .title("Proyecto Fienaku")
+                                .description("Desarrollado por el equipo azul, pasantes del Banco Fie S.A. en el área de ingeniería de sistemas\n\n"
+                                        + members
+                                        + "\n\n[repository](https://github.com/Super-07Z/Fienaku)")
+                                .version("1.0")
                 );
     }
 }

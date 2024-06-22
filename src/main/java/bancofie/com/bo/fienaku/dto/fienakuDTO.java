@@ -1,7 +1,6 @@
 package bancofie.com.bo.fienaku.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Date;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class fienakuDTO {
-    
+public class fienakuDTO {    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "fienaku DTO ID", example = "1", type = "long")
@@ -36,25 +34,4 @@ public class fienakuDTO {
     
     @Schema(description = "Payment Period", example = "15 days; 1 month , 2 month", type = "Integer")
     private Integer timespan; 
-    
-    @Schema(description = "Creation Date", example = "11-11-2011", type = "Date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_At", nullable = false, updatable = false)
-    private Date create;
-
-    @Schema(description = "Update Date", example = "12-11-2011", type = "Date")
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "update_At")
-    private Date update;
-    
-    @PrePersist
-    public void prePersist() {
-        this.create = new Date();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.update = new Date();
-    }
-     
 }

@@ -1,12 +1,9 @@
 package bancofie.com.bo.fienaku.controller;
 
-import bancofie.com.bo.fienaku.upload.storageService;
-
-import io.swagger.v3.oas.annotations.Operation;
-
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import bancofie.com.bo.fienaku.upload.storageService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -16,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
