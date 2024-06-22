@@ -15,13 +15,16 @@ import lombok.Setter;
 @Getter
 @RequiredArgsConstructor
 @NoArgsConstructor
+
 public class apiError {
 
-	@NonNull
-	private HttpStatus estado;
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
-	private LocalDateTime fecha = LocalDateTime.now();
-	@NonNull
-	private String mensaje;
-	
+    @NonNull
+    private HttpStatus estado;
+    
+    @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+    private LocalDateTime fecha = LocalDateTime.now();
+    
+    @NonNull
+    private String mensaje;
+
 }

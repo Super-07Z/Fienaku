@@ -18,31 +18,35 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class storageController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(storageController.class);
 
-	
-	private final storageService storageService;
-	@Operation(summary="get file")
-	@GetMapping(value="/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename, HttpServletRequest request) {
-		Resource file = storageService.loadAsResource(filename);
-		
+    private static final Logger logger = LoggerFactory.getLogger(storageController.class);
+
+    private final storageService storageService;
+
+    @Operation(summary = "get file")
+    @GetMapping(value = "/files/{filename:.+}")
+    @ResponseBody
+    
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename, HttpServletRequest request) {
+        Resource file = storageService.loadAsResource(filename);
+
         String contentType = null;
-        try {
+        try
+        {
             contentType = request.getServletContext().getMimeType(file.getFile().getAbsolutePath());
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             logger.info("Could not determine file type.");
         }
 
-        if(contentType == null) {
+        if (contentType == null)
+        {
             contentType = "application/octet-stream";
         }
-		
-		return ResponseEntity.ok()
-				.contentType(MediaType.parseMediaType(contentType))
-				.body(file);
-	}
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(file);
+    }
 
 }

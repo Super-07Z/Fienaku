@@ -26,9 +26,10 @@ public class fienakuController {
     public fienakuController(fienakuService serviceFienaku) {
         this.serviceFienaku = serviceFienaku;
     }
-    
+
     @Operation(summary = "get list of all Fienakus")
-    @ApiResponses(value = {
+    @ApiResponses(value =
+    {
         @ApiResponse(responseCode = "201", description = "OK", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = fienaku.class))),
         @ApiResponse(responseCode = "400", description = "Bad Request", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class))),
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class)))
@@ -45,8 +46,8 @@ public class fienakuController {
         fienaku fienaku = serviceFienaku.getOne(id);
         return ResponseEntity.ok(fienaku);
     }
-    
-    @Operation(summary = "Delete Fienaku")    
+
+    @Operation(summary = "Delete Fienaku")
     @PostMapping("/delete/{id}")
     public ResponseEntity<fienaku> delete(@PathVariable Long id) {
         serviceFienaku.delete(id);
@@ -59,11 +60,11 @@ public class fienakuController {
         fienaku createdFienaku = serviceFienaku.create(dto, file);
         return ResponseEntity.ok(createdFienaku);
     }
-    
+
     @Operation(summary = "Update Fienaku")
     @PostMapping("/update/{id}")
     public ResponseEntity<fienaku> updateDTO(@PathVariable Long id, @RequestBody fienakuDTO dto) {
         fienaku updatedFienaku = serviceFienaku.update(id, dto);
         return ResponseEntity.ok(updatedFienaku);
-    } 
+    }
 }
