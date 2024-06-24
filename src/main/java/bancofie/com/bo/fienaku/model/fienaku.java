@@ -57,6 +57,9 @@ public class fienaku implements Serializable {
     @ManyToMany(mappedBy = "fienaku")
     private List<user> users = new ArrayList<>();
 
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
+    private List<payment> payment = new ArrayList<>();
+    
     public void addUser(user data) {
         this.users.add(data);
         data.getFienaku().add(this);

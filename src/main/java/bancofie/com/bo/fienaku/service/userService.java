@@ -34,7 +34,7 @@ public class userService {
 
     public user getOne(Long id) {
         return repositoryUser.findById(id)
-                .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
     public user register(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
@@ -45,8 +45,7 @@ public class userService {
         data.setPassword(dto.getPassword());
         data.setAccount(dto.getAccount());
 
-        if (!file.isEmpty())
-        {
+        if (!file.isEmpty()) {
             String imageUrl = serviceStorage.store(file);
             data.setImage(imageUrl);
         }
@@ -58,7 +57,7 @@ public class userService {
     }
 
     public user update(Long id, userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        user update = repositoryUser.findById(id) 
+        user update = repositoryUser.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
 
         update.setName(dto.getName());
@@ -74,7 +73,7 @@ public class userService {
 
         return repositoryUser.save(update);
     }
-        
+
     public void delete(Long id) {
         repositoryUser.deleteById(id);
     }

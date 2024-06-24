@@ -1,9 +1,9 @@
 package bancofie.com.bo.fienaku.service;
 
-import java.util.List;
+import java.util.*;
+import bancofie.com.bo.fienaku.dto.*;
 import bancofie.com.bo.fienaku.model.*;
 import bancofie.com.bo.fienaku.repository.*;
-import bancofie.com.bo.fienaku.dto.fienakuDTO;
 import bancofie.com.bo.fienaku.upload.storageService;
 import java.io.IOException;
 import javax.transaction.Transactional;
@@ -18,14 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class fienakuService {
 
     private final fienakuRepository repositoryFienaku;
+    private final paymentRepository repositoryPayment;
     private final userRepository repositoryUser;
     private final storageService serviceStorage;
 
     @Autowired
-    public fienakuService(fienakuRepository repositoryFienaku, userRepository repositoryUser, storageService serviceStorage) {
+    public fienakuService(fienakuRepository repositoryFienaku, userRepository repositoryUser, storageService serviceStorage, paymentRepository repositoryPayment) {
         this.repositoryFienaku = repositoryFienaku;
         this.repositoryUser = repositoryUser;
         this.serviceStorage = serviceStorage;
+        this.repositoryPayment = repositoryPayment;
     }
 
     public List<fienaku> getAll() {
@@ -86,4 +88,26 @@ public class fienakuService {
     public void delete(Long id) {
         repositoryFienaku.deleteById(id);
     }
+    
+    public Date calculateDate(Date date, int time){
+       Calendar calendar = Calendar.getInstance();
+       
+       calendar.setTime(date);
+       calendar.add(Calendar.DAY_OF_YEAR, time);
+       
+       return calendar.getTime();
+    }
+    
+    public payment sort(fienaku data){
+        
+        payment pay = new payment();
+        
+        //pay.setUser(Collections.shuffle(data.getUsers()));         
+        pay.setDate(calculateDate(data.getCreate(),data.getTimespan()));
+        pay.setMount(data.getMount());
+        payment paymentSaved = repositoryPayment.save(pay);
+        
+        return paymentSaved;
+    }
+
 }

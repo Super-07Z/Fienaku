@@ -73,6 +73,9 @@ public class user implements Serializable, UserDetails {
     )
     private List<fienaku> fienaku;
 
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
+    private List<payment> payment = new ArrayList<>();
+    
     @PrePersist
     public void prePersist() {
         this.create = new Date();
