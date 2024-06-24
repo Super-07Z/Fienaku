@@ -14,6 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import lombok.RequiredArgsConstructor;
 
+<<<<<<< Updated upstream
+=======
+@RequestMapping("/user")
+>>>>>>> Stashed changes
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
