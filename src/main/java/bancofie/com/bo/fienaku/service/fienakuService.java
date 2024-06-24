@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -64,14 +65,21 @@ public class fienakuService {
         return savedFienaku;
     }
 
-    public fienaku update(Long id, fienakuDTO dto) {
+    public fienaku update(Long id, fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku update = repositoryFienaku.findById(id)
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
+        
         update.setName(dto.getName());
         update.setCode(dto.getCode());
         update.setMount(dto.getMount());
         update.setPenitence(dto.getPenitence());
         update.setTimespan(dto.getTimespan());
+        
+        if (!file.isEmpty()) {
+            String imageUrl = serviceStorage.store(file);
+            update.setImage(imageUrl);
+        }
+        
         return repositoryFienaku.save(update);
     }
 

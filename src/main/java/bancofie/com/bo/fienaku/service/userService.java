@@ -19,12 +19,13 @@ public class userService {
 
     private userRepository repositoryUser;
     private final storageService serviceStorage;
-    private PasswordEncoder PasswordEncoder;
+    private PasswordEncoder passwordEncoder;
     
     @Autowired
-    public userService(userRepository repositoryUser, storageService serviceStorage){
+    public userService(userRepository repositoryUser, storageService serviceStorage, PasswordEncoder passwordEncoder){
         this.repositoryUser = repositoryUser;
         this.serviceStorage = serviceStorage;
+        this.passwordEncoder = passwordEncoder;
    }
     
     public List<user> getAll() {
@@ -36,7 +37,7 @@ public class userService {
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
     }
 
-    public user create(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    public user register(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         user data = new user();
         data.setName(dto.getName());
         data.setLastname(dto.getLastname());
@@ -50,7 +51,7 @@ public class userService {
             data.setImage(imageUrl);
         }
 
-        data.setPassword(PasswordEncoder.encode(data.getPassword()));
+        data.setPassword(passwordEncoder.encode(data.getPassword()));
 
         user savedUser = repositoryUser.save(data);
         return savedUser;
@@ -64,7 +65,7 @@ public class userService {
         update.setLastname(dto.getLastname());
         update.setMail(dto.getMail());
         update.setAccount(dto.getAccount());
-        update.setPassword(PasswordEncoder.encode(dto.getPassword()));
+        update.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         if (!file.isEmpty()) {
             String imageUrl = serviceStorage.store(file);

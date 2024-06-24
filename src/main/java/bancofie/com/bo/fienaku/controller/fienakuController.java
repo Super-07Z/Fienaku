@@ -7,13 +7,11 @@ import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.model.fienaku;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.responses.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RequestMapping("/fienaku")
 @RestController
@@ -49,15 +47,15 @@ public class fienakuController {
 
     @Operation(summary = "Register Fienaku")
     @PostMapping("/register")
-    public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        fienaku createdFienaku = serviceFienaku.create(dto, file);
-        return ResponseEntity.ok(createdFienaku);
+    public ResponseEntity<fienaku> register(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku registerFienaku = serviceFienaku.create(dto, file);
+        return ResponseEntity.ok(registerFienaku);
     }
 
     @Operation(summary = "Update Fienaku")
     @PostMapping("/update/{id}")
-    public ResponseEntity<fienaku> updateDTO(@PathVariable Long id, @RequestBody fienakuDTO dto) {
-        fienaku updatedFienaku = serviceFienaku.update(id, dto);
+    public ResponseEntity<fienaku> update(@PathVariable Long id, @RequestBody fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku updatedFienaku = serviceFienaku.update(id, dto, file);
         return ResponseEntity.ok(updatedFienaku);
     }
     
