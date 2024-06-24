@@ -37,7 +37,7 @@ public class userService {
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
     }
 
-    public user register(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    public user create(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         user data = new user();
         data.setName(dto.getName());
         data.setLastname(dto.getLastname());

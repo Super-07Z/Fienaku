@@ -76,6 +76,9 @@ public class user implements Serializable, UserDetails {
     @PrePersist
     public void prePersist() {
         this.create = new Date();
+        if (this.usertype == null) {
+            this.usertype = userType.ROLE_USER;
+        }
     }
 
     @PreUpdate

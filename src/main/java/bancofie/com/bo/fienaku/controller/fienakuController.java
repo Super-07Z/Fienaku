@@ -45,9 +45,9 @@ public class fienakuController {
         return ResponseEntity.ok(fienaku);
     }
 
-    @Operation(summary = "Register Fienaku")
-    @PostMapping("/register")
-    public ResponseEntity<fienaku> register(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    @Operation(summary = "Create Fienaku")
+    @PostMapping("/create")
+    public ResponseEntity<fienaku> create(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku registerFienaku = serviceFienaku.create(dto, file);
         return ResponseEntity.ok(registerFienaku);
     }

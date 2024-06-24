@@ -45,10 +45,10 @@ public class userController {
         return ResponseEntity.ok(user);
     }
 
-    @Operation(summary = "Register User")
-    @PostMapping("/register")
-    public ResponseEntity<user> register(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        user registerUser = serviceUser.register(dto, file);
+    @Operation(summary = "Create User")
+    @PostMapping("/create")
+    public ResponseEntity<user> create(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        user registerUser = serviceUser.create(dto, file);
         return ResponseEntity.ok(registerUser);
     }
 
