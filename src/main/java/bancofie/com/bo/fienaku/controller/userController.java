@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@RequestMapping("/fienaku")
+@RequestMapping("/user")
 @RestController
 
 public class userController {
