@@ -1,0 +1,26 @@
+        return ResponseEntity.ok(fienaku);
+    }
+
+    @Operation(summary = "Registrar usuarios")
+    @PostMapping("/registo")
+    public ResponseEntity<fienaku> register(@RequestPart("registro") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    @Operation(summary = "resgistrar usuario")
+    @PostMapping("/registrar")
+    public ResponseEntity<fienaku> create(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku registerFienaku = serviceFienaku.create(dto, file);
+        return ResponseEntity.ok(registerFienaku);
+    }
+
+
+        return ResponseEntity.ok(fienaku);
+    }
+
+    @Operation(summary = "Eliminar Fienaku")
+    @PostMapping("/eliminar")
+    public ResponseEntity<fienaku> register(@RequestPart("eliminar") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    @Operation(summary = "Eliminar")
+    @PostMapping("/eliminar")
+    public ResponseEntity<fienaku> create(@RequestPart("eliminar") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku eliminarFienaku = serviceFienaku.create(dto, file);
+        return ResponseEntity.ok(eliminarFienaku);
+    }
