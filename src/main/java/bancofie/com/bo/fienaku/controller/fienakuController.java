@@ -47,15 +47,8 @@ public class fienakuController {
         return ResponseEntity.ok(fienaku);
     }
 
-    @Operation(summary = "Delete Fienaku")
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<fienaku> delete(@PathVariable Long id) {
-        serviceFienaku.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "Create Fienaku")
-    @PostMapping("/create")
+    @Operation(summary = "Register Fienaku")
+    @PostMapping("/register")
     public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku createdFienaku = serviceFienaku.create(dto, file);
         return ResponseEntity.ok(createdFienaku);
@@ -66,5 +59,12 @@ public class fienakuController {
     public ResponseEntity<fienaku> updateDTO(@PathVariable Long id, @RequestBody fienakuDTO dto) {
         fienaku updatedFienaku = serviceFienaku.update(id, dto);
         return ResponseEntity.ok(updatedFienaku);
+    }
+    
+    @Operation(summary = "Delete Fienaku")
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<fienaku> delete(@PathVariable Long id) {
+        serviceFienaku.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
