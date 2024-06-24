@@ -104,9 +104,8 @@ public class userController {
         userRepository.delete(user);
         return ResponseEntity.noContent().build();
     }
-}
 
-    @Operation(summary = "Create Fienaku")
+ @Operation(summary = "Create Fienaku")
     @PostMapping("/create")
     public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku createdFienaku = serviceFienaku.create(dto, file);
@@ -119,5 +118,20 @@ public class userController {
         fienaku updatedFienaku = serviceFienaku.update(id, dto);
         return ResponseEntity.ok(updatedFienaku);
     }
+
+    @Operation(summary = "Get names and emails of all Fienakus")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = FienakuInfoDTO.class))),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json", schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = apiError.class)))
+    })
+    @GetMapping("/info")
+    public ResponseEntity<List<FienakuInfoDTO>> getFienakuInfo() {
+        List<fienaku> allFienakus = serviceFienaku.getAll();
+        List<FienakuInfoDTO> infoList = allFienakus.stream()
+            .map(f -> new FienakuInfoDTO(f.getNombre(), f.getCorreo()))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(infoList);
+    }
+}
 
 
