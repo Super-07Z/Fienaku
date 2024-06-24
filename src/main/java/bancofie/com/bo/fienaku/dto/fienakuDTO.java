@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class fienakuDTO {
 
     @Id
@@ -33,6 +32,30 @@ public class fienakuDTO {
     @Schema(description = "Penitence Fienaku", example = "10.00 Bs.-", type = "double")
     private double penitence;
 
-    @Schema(description = "Payment Period", example = "15 days; 1 month , 2 month", type = "Integer")
+    @Schema(description = "Payment Period", example = "15 days; 1 month, 2 month", type = "Integer")
     private Integer timespan;
+
+    private String nombre;
+    private String correo;
+
+    public fienakuDTO(String nombre, String correo) {
+        this.nombre = nombre;
+        this.correo = correo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 }
