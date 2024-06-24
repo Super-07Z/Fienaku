@@ -105,3 +105,19 @@ public class userController {
         return ResponseEntity.noContent().build();
     }
 }
+
+    @Operation(summary = "Create Fienaku")
+    @PostMapping("/create")
+    public ResponseEntity<fienaku> createDTO(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+        fienaku createdFienaku = serviceFienaku.create(dto, file);
+        return ResponseEntity.ok(createdFienaku);
+    }
+
+    @Operation(summary = "Update Fienaku")
+    @PostMapping("/update/{id}")
+    public ResponseEntity<fienaku> updateDTO(@PathVariable Long id, @RequestBody fienakuDTO dto) {
+        fienaku updatedFienaku = serviceFienaku.update(id, dto);
+        return ResponseEntity.ok(updatedFienaku);
+    }
+
+
