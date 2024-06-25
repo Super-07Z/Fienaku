@@ -89,25 +89,67 @@ public class fienakuService {
         repositoryFienaku.deleteById(id);
     }
     
-    public Date calculateDate(Date date, int time){
-       Calendar calendar = Calendar.getInstance();
+    public Date calculateDate(Date date, int span) {
+        Calendar calendar = Calendar.getInstance();
        
-       calendar.setTime(date);
-       calendar.add(Calendar.DAY_OF_YEAR, time);
-       
-       return calendar.getTime();
-    }
-    
-    public payment sort(fienaku data){
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, span);
         
-        payment pay = new payment();
-        
-        //pay.setUser(Collections.shuffle(data.getUsers()));         
-        pay.setDate(calculateDate(data.getCreate(),data.getTimespan()));
-        pay.setMount(data.getMount());
-        payment paymentSaved = repositoryPayment.save(pay);
-        
-        return paymentSaved;
+        return calendar.getTime();
     }
 
+    public List<user> sort(List<user> users) {
+        List<user> sort = new ArrayList<>(users);
+        
+        Collections.shuffle(sort);
+        return sort;
+    }
+
+    public List<Date> calculatePayment(Date create, int span, int count) {
+        List<Date> paymentDates = new ArrayList<>();
+        
+        Date date = create;
+        
+        for (int i = 0; i < count; i++) {
+            date = calculateDate(date, span);
+            paymentDates.add(date);
+        }
+        
+        return paymentDates;
+    }
+/*
+    @Transactional
+    public List<payment> registerPaymentsForAuthenticatedUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        user authenticatedUser = repositoryUser.findByMail(username);
+
+        List<fienaku> userFienakus = repositoryFienaku.findByUsers(authenticatedUser);
+
+        if (userFienakus.isEmpty()) {
+            throw new RuntimeException("No fienaku found for the authenticated user");
+        }
+
+        List<payment> registeredPayments = new ArrayList<>();
+
+        for (fienaku data : userFienakus) {
+            List<user> shuffledUsers = shuffleUsers(data.getUsers());
+            int interval = data.getTimespan();
+            List<Date> paymentDates = calculatePaymentDates(data.getCreate(), interval, shuffledUsers.size());
+
+            for (int i = 0; i < shuffledUsers.size(); i++) {
+                payment pay = new payment();
+                pay.setFienaku(data);
+                pay.setUsers(shuffledUsers.get(i));
+                pay.setDate(paymentDates.get(i));
+                pay.setMount(data.getMount());
+                registeredPayments.add(repositoryPayment.save(pay));
+            }
+        }
+        
+        return registeredPayments;
+    }
+*    
+
+    
 }

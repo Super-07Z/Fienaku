@@ -41,4 +41,7 @@ public class payment implements Serializable{
     
     @Schema(description = "Image", example = "localhost:8080/img/img.png", type = "String")
     private String image;
+    
+    @Schema(description = "Status", example = "true", type = "boolean")
+    private boolean status;
 }

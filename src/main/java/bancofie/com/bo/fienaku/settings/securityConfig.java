@@ -35,6 +35,10 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
             .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
+                
+            .antMatchers(HttpMethod.POST, "/fienaku/date").permitAll()
+            .antMatchers(HttpMethod.POST, "/fienaku/sort").permitAll()
+                
             .antMatchers("/admin").hasRole("ADMIN")
             .antMatchers("/fienaku/all").permitAll()
             .antMatchers("/swagger-ui.html").permitAll()

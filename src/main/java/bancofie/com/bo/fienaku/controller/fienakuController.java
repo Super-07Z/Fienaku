@@ -5,13 +5,16 @@ import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.fienakuDTO;
 import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.model.fienaku;
+import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
+import java.util.Date;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @RequestMapping("/fienaku")
 @RestController
@@ -58,11 +61,20 @@ public class fienakuController {
         fienaku updatedFienaku = serviceFienaku.update(id, dto, file);
         return ResponseEntity.ok(updatedFienaku);
     }
-    
+
     @Operation(summary = "Delete Fienaku")
     @PostMapping("/delete/{id}")
     public ResponseEntity<fienaku> delete(@PathVariable Long id) {
         serviceFienaku.delete(id);
         return ResponseEntity.noContent().build();
     }
+    /*
+    @PostMapping("/register-payments")
+    public ResponseEntity<List<payment>> registerPayments() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        List<payment> registeredPayments = serviceFienaku.registerPaymentsForAuthenticatedUser();
+        return ResponseEntity.ok(registeredPayments);
+    }
+    */
 }
