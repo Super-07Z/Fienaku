@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 
-public class userNotFoundException extends RuntimeException {
+public class fienakuNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 43876691117560211L;
 
-    public userNotFoundException(Long id) {
-        super("Cannot find user with ID: " + id);
+    public fienakuNotFoundException(String code) {
+        super("Cannot find product with ID: " + code);
     }
 
 }

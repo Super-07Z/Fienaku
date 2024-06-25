@@ -82,6 +82,16 @@ public class fienakuService {
         
         return repositoryFienaku.save(update);
     }
+    
+    @Transactional
+    public fienaku getByCode(String code){
+        return repositoryFienaku.findByCode(code);
+    }
+    
+    @Transactional
+    public void save(fienaku fienaku){
+        repositoryFienaku.save(fienaku);
+    }
 
     public void delete(Long id) {
         repositoryFienaku.deleteById(id);

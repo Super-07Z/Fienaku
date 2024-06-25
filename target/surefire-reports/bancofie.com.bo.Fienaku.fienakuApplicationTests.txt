@@ -1,0 +1,13 @@
+-------------------------------------------------------------------------------
+Test set: bancofie.com.bo.Fienaku.fienakuApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.14 s <<< FAILURE! - in bancofie.com.bo.Fienaku.fienakuApplicationTests
+initializationError(bancofie.com.bo.Fienaku.fienakuApplicationTests)  Time elapsed: 0.015 s  <<< ERROR!
+java.lang.Exception: The class bancofie.com.bo.Fienaku.fienakuApplicationTests is not public.
+
+initializationError(bancofie.com.bo.Fienaku.fienakuApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Test class should have exactly one public constructor
+
+initializationError(bancofie.com.bo.Fienaku.fienakuApplicationTests)  Time elapsed: 0 s  <<< ERROR!
+java.lang.Exception: Method contextLoads() should be public
+

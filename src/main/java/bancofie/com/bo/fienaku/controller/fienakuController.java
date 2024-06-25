@@ -5,7 +5,9 @@ import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.fienakuDTO;
 import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.model.fienaku;
+import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.service.fienakuService;
+import bancofie.com.bo.fienaku.service.userService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import org.springframework.http.*;
@@ -19,12 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class fienakuController {
 
     private final fienakuService serviceFienaku;
+    private final userService serviceUser;
 
     @Autowired
-    public fienakuController(fienakuService serviceFienaku) {
+    public fienakuController(fienakuService serviceFienaku, userService serviceUser) {
         this.serviceFienaku = serviceFienaku;
+        this.serviceUser = serviceUser;
     }
-
+    
     @Operation(summary = "get list of all Fienakus")
     @ApiResponses(value =
     {
@@ -65,4 +69,24 @@ public class fienakuController {
         serviceFienaku.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @PostMapping("usuario/{id}/unirse-grupo")
+    public ResponseEntity<?> addUserFienaku(@RequestParam Long id, @RequestParam String code){
+        
+        fienaku fienaku = serviceFienaku.getByCode(code);
+        user user = serviceUser.getOne(id);
+        
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+        if(fienaku == null){
+            return ResponseEntity.notFound().build();
+        }
+        
+        fienaku.addUsers(user);
+        serviceFienaku.save(fienaku);
+        
+        return ResponseEntity.ok().build();
+    }
+    
 }

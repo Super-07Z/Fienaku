@@ -76,4 +76,21 @@ public class fienaku implements Serializable {
     public void preUpdate() {
         this.update = new Date();
     }
+       public List<user> getUser(){
+        return users;
+    }
+    public void listUser(List<user> users){
+        this.users=users;
+    }
+    public void addUsers(user users){
+        this.users.add(users);
+        users.getFienaku().add(this);
+    }
+    public void removeUsers(user users){
+        this.users.add(users);
+        users.getFienaku().remove(this);
+    }
+    
 }
+
+

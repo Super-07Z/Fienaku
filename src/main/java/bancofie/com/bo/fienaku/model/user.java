@@ -115,4 +115,11 @@ public class user implements Serializable, UserDetails {
     public boolean isEnabled() {
         return true;
     }
+     public List<fienaku> getFienaku(){
+        return fienaku;
+    }
+    public void listFienaku(List<fienaku> fienaku){
+        this.fienaku=fienaku;
+    }
 }
+
