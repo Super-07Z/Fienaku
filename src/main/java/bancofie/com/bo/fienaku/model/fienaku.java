@@ -55,18 +55,18 @@ public class fienaku implements Serializable {
 
     @JsonManagedReference
     @ManyToMany(mappedBy = "fienaku")
-    private List<user> users = new ArrayList<>();
+    private List<user> user = new LinkedList<>();
 
     @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
-    private List<payment> payment = new ArrayList<>();
+    private List<payment> payment = new LinkedList<>();
     
     public void addUser(user data) {
-        this.users.add(data);
+        this.user.add(data);
         data.getFienaku().add(this);
     }
 
     public void removeUser(user data) {
-        this.users.remove(data);
+        this.user.remove(data);
         data.getFienaku().remove(this);
     }
 

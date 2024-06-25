@@ -1,12 +1,14 @@
 package bancofie.com.bo.fienaku.service;
 
 import java.util.*;
+import java.io.IOException;
+import javax.transaction.Transactional;
+
 import bancofie.com.bo.fienaku.dto.*;
 import bancofie.com.bo.fienaku.model.*;
 import bancofie.com.bo.fienaku.repository.*;
 import bancofie.com.bo.fienaku.upload.storageService;
-import java.io.IOException;
-import javax.transaction.Transactional;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,11 @@ public class fienakuService {
 
     @Transactional
     public fienaku create(fienakuDTO dto, MultipartFile file) throws IOException {
+        
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        user userManager = repositoryUser.findByMail(username);
+        
         fienaku data = new fienaku();
         data.setName(dto.getName());
         data.setCode(dto.getCode());
@@ -48,19 +55,15 @@ public class fienakuService {
         data.setPenitence(dto.getPenitence());
         data.setTimespan(dto.getTimespan());
 
-        if (!file.isEmpty())
-        {
+        if (!file.isEmpty()) {
             String imageUrl = serviceStorage.store(file);
             data.setImage(imageUrl);
         }
 
         fienaku savedFienaku = repositoryFienaku.save(data);
 
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        user userManager = repositoryUser.findByMail(username);
-
         savedFienaku.addUser(userManager);
+        
         userManager.setUsertype(userType.ROLE_MANAGER);
         repositoryUser.save(userManager);
 
@@ -70,86 +73,82 @@ public class fienakuService {
     public fienaku update(Long id, fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku update = repositoryFienaku.findById(id)
                 .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
-        
+
         update.setName(dto.getName());
         update.setCode(dto.getCode());
         update.setMount(dto.getMount());
         update.setPenitence(dto.getPenitence());
         update.setTimespan(dto.getTimespan());
-        
+
         if (!file.isEmpty()) {
             String imageUrl = serviceStorage.store(file);
             update.setImage(imageUrl);
         }
-        
+
         return repositoryFienaku.save(update);
     }
 
     public void delete(Long id) {
         repositoryFienaku.deleteById(id);
     }
-    
+
     public Date calculateDate(Date date, int span) {
         Calendar calendar = Calendar.getInstance();
-       
+
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_YEAR, span);
-        
+
         return calendar.getTime();
     }
 
     public List<user> sort(List<user> users) {
-        List<user> sort = new ArrayList<>(users);
-        
+        List<user> sort = new LinkedList<>(users);
+
         Collections.shuffle(sort);
         return sort;
     }
 
-    public List<Date> calculatePayment(Date create, int span, int count) {
-        List<Date> paymentDates = new ArrayList<>();
-        
+    public List<Date> calculatePayment(Date create, int span, int j) {
+        List<Date> paymentDates = new LinkedList<>();
+
         Date date = create;
-        
-        for (int i = 0; i < count; i++) {
+
+        for (int i = 0; i < j; i++) {
             date = calculateDate(date, span);
             paymentDates.add(date);
         }
-        
+
         return paymentDates;
     }
-/*
-    @Transactional
-    public List<payment> registerPaymentsForAuthenticatedUser() {
+
+    public List<payment> registerPayment() {
+
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        user authenticatedUser = repositoryUser.findByMail(username);
+        String mail = userDetails.getUsername();
 
-        List<fienaku> userFienakus = repositoryFienaku.findByUsers(authenticatedUser);
+        user managerUser = repositoryUser.findByMail(mail);
 
-        if (userFienakus.isEmpty()) {
-            throw new RuntimeException("No fienaku found for the authenticated user");
-        }
+        List<fienaku> users = repositoryFienaku.findByUser(managerUser);
 
-        List<payment> registeredPayments = new ArrayList<>();
+        List<payment> registerPayment = new LinkedList<>();
 
-        for (fienaku data : userFienakus) {
-            List<user> shuffledUsers = shuffleUsers(data.getUsers());
-            int interval = data.getTimespan();
-            List<Date> paymentDates = calculatePaymentDates(data.getCreate(), interval, shuffledUsers.size());
+        for (fienaku data : users) {
 
-            for (int i = 0; i < shuffledUsers.size(); i++) {
+            List<user> sortUsers = sort(data.getUser());
+            int span = data.getTimespan();
+            List<Date> payment = calculatePayment(data.getCreate(), span, sortUsers.size());
+
+            for (int i = 0; i < sortUsers.size(); i++) {
                 payment pay = new payment();
                 pay.setFienaku(data);
-                pay.setUsers(shuffledUsers.get(i));
-                pay.setDate(paymentDates.get(i));
+                pay.setUser(sortUsers.get(i));
+                pay.setDate(payment.get(i));
                 pay.setMount(data.getMount());
-                registeredPayments.add(repositoryPayment.save(pay));
+                registerPayment.add(repositoryPayment.save(pay));
             }
-        }
-        
-        return registeredPayments;
-    }
-*    
 
-    
+        }
+        return registerPayment;
+    }
+
 }

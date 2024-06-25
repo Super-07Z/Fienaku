@@ -1,6 +1,7 @@
 package bancofie.com.bo.fienaku.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.*;
 import javax.persistence.*;
 import lombok.Data;
@@ -27,9 +28,7 @@ public class payment implements Serializable{
     private fienaku fienaku;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
-    @JsonIgnore
-    private user users;
+    private user user;
     
     @Schema(description = "Mount", example = "20 Bs.-", type = "double")
     private double mount;
