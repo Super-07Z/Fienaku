@@ -21,10 +21,10 @@ insert into user (name, lastname, mail, password, account, userType, create_At, 
 insert into user (name, lastname, mail, password, account, userType, create_At, update_At) values ('Usuario9', 'Apellido9', 'usuario9@correo.com', '123', 120120, 'ROLE_USER', NOW(), NOW());
 
 -- Equipo Azul
-insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Azul', 'CCX3', 200.0, 20.0, 15, NOW(), NOW());
+insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Azul', 'CCX3', 200.0, 20.0, 31, NOW(), NOW());
 
 -- Equipo Magenta
-insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Magenta', 'CCX4', 300.0, 30.0, 15, NOW(), NOW());
+insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Magenta', 'CCX4', 300.0, 30.0, 31, NOW(), NOW());
 
 -- Relacion Equipos - Usuarios
 insert into fienaku_User (fienaku_Id, user_Id) values (1, 6);

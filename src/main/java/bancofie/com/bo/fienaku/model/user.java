@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @NoArgsConstructor
@@ -73,8 +74,9 @@ public class user implements Serializable, UserDetails {
     )
     private List<fienaku> fienaku;
 
-    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
-    private List<payment> payment = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<charge> charge;
     
     @PrePersist
     public void prePersist() {

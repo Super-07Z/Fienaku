@@ -33,14 +33,11 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/user/**").hasRole("USER")
+            .antMatchers(HttpMethod.POST, "/payment/**").hasRole("MANAGER")
+            .antMatchers(HttpMethod.POST, "/charge/**").hasRole("MANAGER")
+            .antMatchers(HttpMethod.POST, "/user/**").hasAnyRole("USER", "MANAGER")
             .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
-                
-            .antMatchers(HttpMethod.POST, "/fienaku/date").permitAll()
-            .antMatchers(HttpMethod.POST, "/fienaku/sort").permitAll()
-                
-            .antMatchers("/admin").hasRole("ADMIN")
-            .antMatchers("/fienaku/all").permitAll()
+
             .antMatchers("/swagger-ui.html").permitAll()
             .anyRequest().permitAll()
             .and().httpBasic()

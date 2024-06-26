@@ -17,19 +17,20 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+
 public class fienakuService {
 
     private final fienakuRepository repositoryFienaku;
-    private final paymentRepository repositoryPayment;
+    private final chargeRepository repositoryCharge;
     private final userRepository repositoryUser;
     private final storageService serviceStorage;
 
     @Autowired
-    public fienakuService(fienakuRepository repositoryFienaku, userRepository repositoryUser, storageService serviceStorage, paymentRepository repositoryPayment) {
+    public fienakuService(fienakuRepository repositoryFienaku, userRepository repositoryUser, storageService serviceStorage, chargeRepository repositoryCharge) {
         this.repositoryFienaku = repositoryFienaku;
         this.repositoryUser = repositoryUser;
         this.serviceStorage = serviceStorage;
-        this.repositoryPayment = repositoryPayment;
+        this.repositoryCharge = repositoryCharge;
     }
 
     public List<fienaku> getAll() {
@@ -37,8 +38,7 @@ public class fienakuService {
     }
 
     public fienaku getOne(Long id) {
-        return repositoryFienaku.findById(id)
-                .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
+        return repositoryFienaku.findById(id).orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class fienakuService {
         data.setPenitence(dto.getPenitence());
         data.setTimespan(dto.getTimespan());
 
-        if (!file.isEmpty()) {
+        if (!file.isEmpty()){
             String imageUrl = serviceStorage.store(file);
             data.setImage(imageUrl);
         }
@@ -71,8 +71,8 @@ public class fienakuService {
     }
 
     public fienaku update(Long id, fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        fienaku update = repositoryFienaku.findById(id)
-                .orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
+        
+        fienaku update = repositoryFienaku.findById(id).orElseThrow(() -> new RuntimeException("fienaku not found with id " + id));
 
         update.setName(dto.getName());
         update.setCode(dto.getCode());
@@ -80,7 +80,7 @@ public class fienakuService {
         update.setPenitence(dto.getPenitence());
         update.setTimespan(dto.getTimespan());
 
-        if (!file.isEmpty()) {
+        if (!file.isEmpty()){
             String imageUrl = serviceStorage.store(file);
             update.setImage(imageUrl);
         }
@@ -102,53 +102,60 @@ public class fienakuService {
     }
 
     public List<user> sort(List<user> users) {
-        List<user> sort = new LinkedList<>(users);
+        List<user> list = new LinkedList<>(users);
 
-        Collections.shuffle(sort);
-        return sort;
+        Collections.shuffle(list);
+        return list;
     }
 
-    public List<Date> calculatePayment(Date create, int span, int j) {
+    public List<Date> calculateCharge(Date create, int span, int j) {
         List<Date> paymentDates = new LinkedList<>();
 
         Date date = create;
 
-        for (int i = 0; i < j; i++) {
+        for (int i = 0; i < j; i++){
             date = calculateDate(date, span);
             paymentDates.add(date);
         }
 
         return paymentDates;
     }
-
-    public List<payment> registerPayment() {
+    
+    public List<chargeDTO> shuffle() {
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String mail = userDetails.getUsername();
 
-        user managerUser = repositoryUser.findByMail(mail);
+        user manager = repositoryUser.findByMail(mail);
 
-        List<fienaku> users = repositoryFienaku.findByUser(managerUser);
+        List<fienaku> users = repositoryFienaku.findByUser(manager);
 
-        List<payment> registerPayment = new LinkedList<>();
+        List<chargeDTO> registerCharge = new LinkedList<>();
 
-        for (fienaku data : users) {
+        for (fienaku data : users){
+
+            if (repositoryCharge.existsByFienaku(data)){
+                throw new RuntimeException("This fienaku has registered payments");
+            }
 
             List<user> sortUsers = sort(data.getUser());
             int span = data.getTimespan();
-            List<Date> payment = calculatePayment(data.getCreate(), span, sortUsers.size());
+            List<Date> charge = calculateCharge(data.getCreate(), span, sortUsers.size());
 
-            for (int i = 0; i < sortUsers.size(); i++) {
-                payment pay = new payment();
-                pay.setFienaku(data);
-                pay.setUser(sortUsers.get(i));
-                pay.setDate(payment.get(i));
-                pay.setMount(data.getMount());
-                registerPayment.add(repositoryPayment.save(pay));
+            for (int i = 0; i < sortUsers.size(); i++){
+                charge charx = new charge();
+                charx.setFienaku(data);
+                charx.setUser(sortUsers.get(i));
+                charx.setAccount(sortUsers.get(i).getAccount());
+                charx.setDate(charge.get(i));
+                charx.setMount(data.getMount());
+
+                charge saveCharge = repositoryCharge.save(charx);
+
+                registerCharge.add(chargeDTO.charge(saveCharge));
             }
-
         }
-        return registerPayment;
+        return registerCharge;
     }
 
 }

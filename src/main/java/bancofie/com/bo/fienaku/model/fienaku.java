@@ -1,14 +1,14 @@
 package bancofie.com.bo.fienaku.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.*;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @NoArgsConstructor
@@ -55,10 +55,11 @@ public class fienaku implements Serializable {
 
     @JsonManagedReference
     @ManyToMany(mappedBy = "fienaku")
-    private List<user> user = new LinkedList<>();
+    private List<user> user;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
-    private List<payment> payment = new LinkedList<>();
+    private List<charge> charge;
     
     public void addUser(user data) {
         this.user.add(data);

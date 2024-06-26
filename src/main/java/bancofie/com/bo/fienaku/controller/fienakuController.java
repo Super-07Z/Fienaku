@@ -2,10 +2,9 @@ package bancofie.com.bo.fienaku.controller;
 
 import java.util.List;
 import java.io.IOException;
-import bancofie.com.bo.fienaku.dto.fienakuDTO;
+import bancofie.com.bo.fienaku.dto.*;
 import bancofie.com.bo.fienaku.error.apiError;
 import bancofie.com.bo.fienaku.model.fienaku;
-import bancofie.com.bo.fienaku.model.payment;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
@@ -35,41 +34,41 @@ public class fienakuController {
     })
 
     @PostMapping("/all")
-    public ResponseEntity<List<fienaku>> getAll() {
+    public ResponseEntity <List<fienaku>> getAll() {
         List<fienaku> allFienakus = serviceFienaku.getAll();
         return ResponseEntity.ok(allFienakus);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<fienaku> getOne(@PathVariable Long id) {
+    public ResponseEntity <fienaku> getOne(@PathVariable Long id) {
         fienaku fienaku = serviceFienaku.getOne(id);
         return ResponseEntity.ok(fienaku);
     }
 
     @Operation(summary = "Register Fienaku")
     @PostMapping("/register")
-    public ResponseEntity<fienaku> register(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity <fienaku> register(@RequestPart("fienaku") fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku registerFienaku = serviceFienaku.create(dto, file);
         return ResponseEntity.ok(registerFienaku);
     }
 
     @Operation(summary = "Update Fienaku")
     @PostMapping("/update/{id}")
-    public ResponseEntity<fienaku> update(@PathVariable Long id, @RequestBody fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity <fienaku> update(@PathVariable Long id, @RequestBody fienakuDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         fienaku updatedFienaku = serviceFienaku.update(id, dto, file);
         return ResponseEntity.ok(updatedFienaku);
     }
 
     @Operation(summary = "Delete Fienaku")
     @PostMapping("/delete/{id}")
-    public ResponseEntity<fienaku> delete(@PathVariable Long id) {
+    public ResponseEntity <fienaku> delete(@PathVariable Long id) {
         serviceFienaku.delete(id);
         return ResponseEntity.noContent().build();
     }
     
-    @PostMapping("/payments")
-    public ResponseEntity<List<payment>> registerPayments() {
-        List<payment> registeredPayments = serviceFienaku.registerPayment();
+    @PostMapping("/shuffle")
+    public ResponseEntity <List<chargeDTO>> shuffle() {
+        List<chargeDTO> registeredPayments = serviceFienaku.shuffle();
         return ResponseEntity.ok(registeredPayments);
     }
  
