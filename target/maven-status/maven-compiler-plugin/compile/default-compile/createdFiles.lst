@@ -16,6 +16,7 @@ bancofie\com\bo\fienaku\model\userType.class
 bancofie\com\bo\fienaku\settings\swaggerSettings.class
 bancofie\com\bo\fienaku\controller\storageController.class
 bancofie\com\bo\fienaku\service\userDetailsServiceImpl.class
+bancofie\com\bo\fienaku\error\fienakuNotFoundException.class
 bancofie\com\bo\fienaku\controller\userController.class
 bancofie\com\bo\fienaku\upload\fileStorageService.class
 bancofie\com\bo\fienaku\error\apiError.class
