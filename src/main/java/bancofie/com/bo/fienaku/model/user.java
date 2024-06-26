@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @NoArgsConstructor
@@ -72,13 +73,10 @@ public class user implements Serializable, UserDetails {
             inverseJoinColumns = @JoinColumn(name = "fienaku_Id")
     )
     private List<fienaku> fienaku;
-
+   
     @PrePersist
     public void prePersist() {
         this.create = new Date();
-        if (this.usertype == null) {
-            this.usertype = userType.ROLE_USER;
-        }
     }
 
     @PreUpdate
@@ -115,11 +113,4 @@ public class user implements Serializable, UserDetails {
     public boolean isEnabled() {
         return true;
     }
-     public List<fienaku> getFienaku(){
-        return fienaku;
-    }
-    public void listFienaku(List<fienaku> fienaku){
-        this.fienaku=fienaku;
-    }
 }
-

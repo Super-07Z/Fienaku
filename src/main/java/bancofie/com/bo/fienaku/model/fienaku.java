@@ -1,14 +1,14 @@
 package bancofie.com.bo.fienaku.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.*;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @NoArgsConstructor
@@ -55,15 +55,19 @@ public class fienaku implements Serializable {
 
     @JsonManagedReference
     @ManyToMany(mappedBy = "fienaku")
-    private List<user> users = new ArrayList<>();
+    private List<user> user;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
+    private List<charge> charge;
+    
     public void addUser(user data) {
-        this.users.add(data);
+        this.user.add(data);
         data.getFienaku().add(this);
     }
 
     public void removeUser(user data) {
-        this.users.remove(data);
+        this.user.remove(data);
         data.getFienaku().remove(this);
     }
 
@@ -76,21 +80,4 @@ public class fienaku implements Serializable {
     public void preUpdate() {
         this.update = new Date();
     }
-       public List<user> getUser(){
-        return users;
-    }
-    public void listUser(List<user> users){
-        this.users=users;
-    }
-    public void addUsers(user users){
-        this.users.add(users);
-        users.getFienaku().add(this);
-    }
-    public void removeUsers(user users){
-        this.users.add(users);
-        users.getFienaku().remove(this);
-    }
-    
 }
-
-
