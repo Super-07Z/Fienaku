@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -33,9 +33,15 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
+                
+            .antMatchers(HttpMethod.POST, "/fienaku/all").hasRole("ADMIN")
+                
             .antMatchers(HttpMethod.POST, "/payment/**").hasRole("MANAGER")
+                
             .antMatchers(HttpMethod.POST, "/charge/**").hasRole("MANAGER")
+                
             .antMatchers(HttpMethod.POST, "/user/**").hasAnyRole("USER", "MANAGER")
+                
             .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
 
             .antMatchers("/swagger-ui.html").permitAll()
@@ -48,7 +54,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder passwordEncoder() {
+            return new BCryptPasswordEncoder();
     }
 }

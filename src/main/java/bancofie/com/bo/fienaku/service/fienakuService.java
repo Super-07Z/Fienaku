@@ -46,7 +46,7 @@ public class fienakuService {
         
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
-        user userManager = repositoryUser.findByMail(username);
+        user userManager = repositoryUser.findByUsername(username);
         
         fienaku data = new fienaku();
         data.setName(dto.getName());
@@ -124,9 +124,9 @@ public class fienakuService {
     public List<chargeDTO> shuffle() {
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String mail = userDetails.getUsername();
+        String username = userDetails.getUsername();
 
-        user manager = repositoryUser.findByMail(mail);
+        user manager = repositoryUser.findByUsername(username);
 
         List<fienaku> users = repositoryFienaku.findByUser(manager);
 
@@ -157,7 +157,8 @@ public class fienakuService {
         }
         return registerCharge;
     }
-        @Transactional
+    
+    @Transactional
     public fienaku getByCode(String code){
         return repositoryFienaku.findByCode(code);
     }

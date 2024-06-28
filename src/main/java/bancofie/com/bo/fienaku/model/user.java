@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.Email;
 
 @Data
 @NoArgsConstructor
@@ -33,16 +34,25 @@ public class user implements Serializable, UserDetails {
     @NotBlank
     @Schema(description = "Last Name", example = "Perez", type = "String")
     private String lastname;
+  
+    @NotBlank
+    @Schema(description = "job", example = "Technological innovation", type = "String")
+    private String job;
 
     @NotBlank
+    @Schema(description = "floor", example = "Piso 23", type = "Integer")
+    private Integer floor;
+    
+    @NotBlank
+    @Schema(description = "phone", example = "78426548", type = "Integer")
+    private Integer phone;
+              
+    @NotBlank
+    @Email
     @Schema(description = "Mail", example = "juan@email.com", type = "String")
     @Column(unique = true, length = 60)
     private String mail;
-
-    @NotBlank
-    @Schema(description = "Password", example = "123", type = "String")
-    private String password;
-
+    
     @Schema(description = "Account", example = "11515143", type = "Integer")
     @Column(unique = true, length = 60)
     private int account;
@@ -51,9 +61,19 @@ public class user implements Serializable, UserDetails {
     private String image;
 
     @Schema(description = "User Type ID", type = "User_Type")
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "userType")
     private userType usertype;
+    
+    @NotBlank
+    @Schema(description = "userName", example = "Perez", type = "String")
+    private String username;        
+
+    @NotBlank
+    @JsonIgnore
+    @Schema(description = "Password", example = "123", type = "String")
+    private String password;
 
     @Schema(description = "Creation Date", example = "11-11-2011", type = "Date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -73,6 +93,9 @@ public class user implements Serializable, UserDetails {
             inverseJoinColumns = @JoinColumn(name = "fienaku_Id")
     )
     private List<fienaku> fienaku;
+    
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<charge> charge;
    
     @PrePersist
     public void prePersist() {
@@ -91,7 +114,7 @@ public class user implements Serializable, UserDetails {
 
     @Override
     public String getUsername() {
-        return this.mail;
+        return this.username;
     }
 
     @Override
@@ -112,11 +135,5 @@ public class user implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    public List<fienaku> getFienaku(){
-        return fienaku;
-    }
-    public void listFienaku(List<fienaku> fienaku){
-        this.fienaku=fienaku;
     }
 }
