@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface fienakuRepository extends JpaRepository<fienaku, Long> {
     List<fienaku> findByUser(user user);
+    fienaku findByCode(String code);
 }

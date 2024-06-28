@@ -5,6 +5,8 @@ import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.userDTO;
 import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.error.*;
+import bancofie.com.bo.fienaku.model.fienaku;
+import bancofie.com.bo.fienaku.service.fienakuService;
 import bancofie.com.bo.fienaku.service.userService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
@@ -19,10 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class userController {
 
     private final userService serviceUser;
+    private final fienakuService serviceFienaku;
 
     @Autowired
-    public userController(userService serviceUser) {
+    public userController(userService serviceUser,fienakuService serviceFienaku) {
         this.serviceUser = serviceUser;
+        this.serviceFienaku = serviceFienaku;
     }
 
     @ApiResponses(value =
@@ -63,6 +67,14 @@ public class userController {
     @PostMapping("/delete/{id}")
     public ResponseEntity<user> delete(@PathVariable Long id) {
         serviceUser.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+     @PostMapping("usuario/{id}/unirseGrupo")
+    public ResponseEntity<?> addUserFienaku(@RequestParam Long id, @RequestParam String code){
+        fienaku fienaku = serviceFienaku.getByCode(code);
+        user user = serviceUser.getOne(id);
+        fienaku.addUser(user);
+        serviceFienaku.save(fienaku);
         return ResponseEntity.noContent().build();
     }
 }
