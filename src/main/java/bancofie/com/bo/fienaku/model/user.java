@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -39,13 +40,13 @@ public class user implements Serializable, UserDetails {
     @Schema(description = "job", example = "Technological innovation", type = "String")
     private String job;
 
-    @NotBlank
+    @NotNull
     @Schema(description = "floor", example = "Piso 23", type = "Integer")
-    private Integer floor;
+    private String floor;
     
-    @NotBlank
+    @NotNull
     @Schema(description = "phone", example = "78426548", type = "Integer")
-    private Integer phone;
+    private String phone;
               
     @NotBlank
     @Email
@@ -53,6 +54,7 @@ public class user implements Serializable, UserDetails {
     @Column(unique = true, length = 60)
     private String mail;
     
+    @NotNull
     @Schema(description = "Account", example = "11515143", type = "Integer")
     @Column(unique = true, length = 60)
     private int account;
@@ -94,9 +96,9 @@ public class user implements Serializable, UserDetails {
     )
     private List<fienaku> fienaku;
     
-    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<charge> charge;
-   
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<charge> charge = new ArrayList<>();
+      
     @PrePersist
     public void prePersist() {
         this.create = new Date();

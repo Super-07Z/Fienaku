@@ -4,6 +4,7 @@ import java.util.List;
 import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.*;
 import bancofie.com.bo.fienaku.error.apiError;
+import bancofie.com.bo.fienaku.model.charge;
 import bancofie.com.bo.fienaku.model.fienaku;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,9 +68,9 @@ public class fienakuController {
     }
     
     @PostMapping("/shuffle")
-    public ResponseEntity <List<chargeDTO>> shuffle() {
-        List<chargeDTO> registeredPayments = serviceFienaku.shuffle();
-        return ResponseEntity.ok(registeredPayments);
+    public ResponseEntity<List<chargeDTO>> shuffle() {
+        List<chargeDTO> charges = serviceFienaku.shuffle();
+        return ResponseEntity.ok(charges);
     }
- 
+    
 }
