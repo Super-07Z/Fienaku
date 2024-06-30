@@ -28,33 +28,28 @@ public class user implements Serializable, UserDetails {
     @Schema(description = "User ID", example = "1", type = "long")
     private Long id;
 
-    @NotBlank
+    @Schema(description = "userName", example = "Perez", type = "String")
+    private String username;  
+        
     @Schema(description = "Name", example = "Juan", type = "String")
     private String name;
 
-    @NotBlank
     @Schema(description = "Last Name", example = "Perez", type = "String")
     private String lastname;
   
-    @NotBlank
     @Schema(description = "job", example = "Technological innovation", type = "String")
     private String job;
 
-    @NotNull
     @Schema(description = "floor", example = "Piso 23", type = "Integer")
     private String floor;
     
-    @NotNull
     @Schema(description = "phone", example = "78426548", type = "Integer")
     private String phone;
               
-    @NotBlank
-    @Email
     @Schema(description = "Mail", example = "juan@email.com", type = "String")
     @Column(unique = true, length = 60)
     private String mail;
     
-    @NotNull
     @Schema(description = "Account", example = "11515143", type = "Integer")
     @Column(unique = true, length = 60)
     private int account;
@@ -66,13 +61,8 @@ public class user implements Serializable, UserDetails {
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "userType")
-    private userType usertype;
-    
-    @NotBlank
-    @Schema(description = "userName", example = "Perez", type = "String")
-    private String username;        
+    private userType usertype;        
 
-    @NotBlank
     @JsonIgnore
     @Schema(description = "Password", example = "123", type = "String")
     private String password;
@@ -110,7 +100,7 @@ public class user implements Serializable, UserDetails {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roleName = this.usertype.name();
+        String roleName = this.usertype != null ? this.usertype.name() : "USER_ROLE";
         return Collections.singleton(new SimpleGrantedAuthority(roleName));
     }
 

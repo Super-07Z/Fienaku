@@ -4,7 +4,6 @@ import java.util.List;
 import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.*;
 import bancofie.com.bo.fienaku.error.apiError;
-import bancofie.com.bo.fienaku.model.charge;
 import bancofie.com.bo.fienaku.model.fienaku;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +39,7 @@ public class fienakuController {
         return ResponseEntity.ok(allFienakus);
     }
 
+    @Operation(summary = "Get a one Fienaku")
     @PostMapping("/{id}")
     public ResponseEntity <fienaku> getOne(@PathVariable Long id) {
         fienaku fienaku = serviceFienaku.getOne(id);
@@ -67,6 +67,7 @@ public class fienakuController {
         return ResponseEntity.noContent().build();
     }
     
+    @Operation(summary = "Shuffle Fienaku")
     @PostMapping("/shuffle")
     public ResponseEntity<List<chargeDTO>> shuffle() {
         List<chargeDTO> charges = serviceFienaku.shuffle();

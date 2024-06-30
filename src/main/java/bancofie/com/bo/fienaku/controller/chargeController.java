@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,7 @@ public class chargeController {
     }
 
     @Operation(summary = "Updload Image")
-    @PostMapping("/update/{id}")
+    @PostMapping(path ="/update/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<charge> update(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
         charge updatedCharge = serviceCharge.update(id, file);
         return ResponseEntity.ok(updatedCharge);

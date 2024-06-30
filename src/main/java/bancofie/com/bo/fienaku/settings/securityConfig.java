@@ -34,27 +34,40 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
                 
-            .antMatchers(HttpMethod.POST, "/fienaku/all").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/user/register").permitAll()
                 
-            .antMatchers(HttpMethod.POST, "/payment/**").hasRole("MANAGER")
-                
-            .antMatchers(HttpMethod.POST, "/charge/**").hasRole("MANAGER")
-                
-            .antMatchers(HttpMethod.POST, "/user/**").hasAnyRole("USER", "MANAGER")
-                
-            .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/user/uploadImage").hasAnyRole("USER", "MANAGER", "ADMIN")
 
-            .antMatchers("/swagger-ui.html").permitAll()
-            .anyRequest().permitAll()
-            .and().httpBasic()
-            .and().formLogin()
-            .permitAll()
-            .and().logout()
-            .permitAll();
+                .antMatchers(HttpMethod.POST, "/user/update").hasAnyRole("USER", "MANAGER", "ADMIN")
+                
+                .antMatchers(HttpMethod.POST, "/user/delete/{id}").hasAnyRole("USER", "MANAGER", "ADMIN")
+                
+                .antMatchers(HttpMethod.POST, "/user/{id}").hasAnyRole("MANAGER", "ADMIN")
+                
+                .antMatchers(HttpMethod.POST, "/user/all").hasRole("ADMIN")
+                
+                
+                .antMatchers(HttpMethod.POST, "/user/{id]").hasRole("ADMIN")
+                
+                .antMatchers(HttpMethod.POST, "/fienaku/**").hasAnyRole("ADMIN", "MANAGER")
+                .antMatchers(HttpMethod.POST, "/payment/**").hasRole("MANAGER")
+                .antMatchers(HttpMethod.POST, "/charge/**").hasRole("MANAGER")
+
+                .antMatchers(HttpMethod.POST, "/fienaku/create").hasRole("USER")
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
+                .anyRequest().authenticated()
+            .and()
+                .httpBasic()
+            .and()
+                .formLogin()
+                    .permitAll()
+            .and()
+                .logout()
+                    .permitAll();
     }
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
-            return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 }

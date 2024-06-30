@@ -2,14 +2,17 @@ package bancofie.com.bo.fienaku.controller;
 
 import java.util.List;
 import java.io.IOException;
+
 import bancofie.com.bo.fienaku.dto.userDTO;
 import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.error.*;
 import bancofie.com.bo.fienaku.model.fienaku;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import bancofie.com.bo.fienaku.service.userService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,27 +52,56 @@ public class userController {
         return ResponseEntity.ok(user);
     }
 
-    @Operation(summary = "Register User")
+    @Operation(summary = "Create User")
     @PostMapping("/register")
-    public ResponseEntity<user> register(@RequestPart("user") userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        user registerUser = serviceUser.register(dto, file);
-        return ResponseEntity.ok(registerUser);
+    public ResponseEntity<user> register(@RequestBody userDTO dto) {
+        user newUser = serviceUser.register(dto);
+        return ResponseEntity.ok(newUser);
+    }
+    
+    @Operation(summary = "Upload Image")
+    @PostMapping(value = "/uploadImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<user> uploadImage(@RequestPart("file") MultipartFile file) throws IOException {
+        user updatedUser = serviceUser.uploadImage(file);
+        return ResponseEntity.ok(updatedUser);
     }
 
+    @Operation(summary = "Upload Image with ID")
+    @PostMapping(value = "/uploadImageID/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<user> uploadImageID(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
+        user updatedUser = serviceUser.uploadImageId(id,file);
+        return ResponseEntity.ok(updatedUser);
+    }
+    
     @Operation(summary = "Update User")
-    @PostMapping("/update/{id}")
-    public ResponseEntity<user> update(@PathVariable Long id, @RequestBody userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
-        user updateUser = serviceUser.update(id, dto, file);
+    @PostMapping(path = "/update")
+    public ResponseEntity<user> update(@RequestBody userDTO dto) throws IOException {
+        user updateUser = serviceUser.update(dto);
         return ResponseEntity.ok(updateUser);
     }
 
+    @Operation(summary = "Update user with ID")
+    @PostMapping(value = "/uploadImageID/{id}")
+    public ResponseEntity<user> uploadUserID(@PathVariable Long id, @RequestBody userDTO dto) throws IOException {
+        user updatedUser = serviceUser.updateId(id,dto);
+        return ResponseEntity.ok(updatedUser);
+    }
+    
     @Operation(summary = "Delete User")
-    @PostMapping("/delete/{id}")
+    @PostMapping("/delete")
     public ResponseEntity<user> delete(@PathVariable Long id) {
-        serviceUser.delete(id);
+        serviceUser.delete();
         return ResponseEntity.noContent().build();
     }
-     @PostMapping("usuario/{id}/unirseGrupo")
+    
+    @Operation(summary = "Delete User ID")
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<user> deleteID(@PathVariable Long id) {
+        serviceUser.deleteID(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @PostMapping("usuario/{id}/unirseGrupo")
     public ResponseEntity<?> addUserFienaku(@RequestParam Long id, @RequestParam String code){
         fienaku fienaku = serviceFienaku.getByCode(code);
         user user = serviceUser.getOne(id);
