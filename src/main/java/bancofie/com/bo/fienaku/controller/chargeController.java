@@ -1,18 +1,15 @@
 package bancofie.com.bo.fienaku.controller;
 
+import java.util.List;
 import java.io.IOException;
-
 import bancofie.com.bo.fienaku.error.apiError;
-import bancofie.com.bo.fienaku.model.charge;
+import bancofie.com.bo.fienaku.model.*;
 import bancofie.com.bo.fienaku.service.chargeService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,16 +38,45 @@ public class chargeController {
         return ResponseEntity.ok(allFienakus);
     }
 
+    @Operation(summary = "Updload Image")
     @PostMapping("/update/{id}")
     public ResponseEntity<charge> update(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
         charge updatedCharge = serviceCharge.update(id, file);
         return ResponseEntity.ok(updatedCharge);
     }
 
+    @Operation(summary = "Status Charge")
     @PostMapping("/status/{id}")
     public ResponseEntity<charge> status(@PathVariable Long id) {
         charge updatedCharge = serviceCharge.status(id);
         return ResponseEntity.ok(updatedCharge);
     }
 
+    @Operation(summary = "Status = true Charge Fienaku")
+    @PostMapping("/accepted")
+    public ResponseEntity<List<charge>> acceptedCharge() {
+        List<charge> acceptedCharge = serviceCharge.accepted();
+        return ResponseEntity.ok(acceptedCharge);
+    }
+    
+    @Operation(summary = "Status = false Charge Fienaku")
+    @PostMapping("/rejected")
+    public ResponseEntity<List<charge>> rejectedCharge() {
+        List<charge> rejectedCharge = serviceCharge.rejected();
+        return ResponseEntity.ok(rejectedCharge);
+    }
+    
+    @Operation(summary = "Status = true all Fienaku")
+    @PostMapping("/acceptedAll")
+    public ResponseEntity<List<charge>> acceptedAllCharge() {
+        List<charge> acceptedAllCharge = serviceCharge.acceptedAll();
+        return ResponseEntity.ok(acceptedAllCharge);
+    }
+    
+    @Operation(summary = "Status = false all Fienaku")
+    @PostMapping("/rejectedAll")
+    public ResponseEntity<List<charge>> rejectedAllCharge() {
+        List<charge> rejectedAllCharge = serviceCharge.rejectedAll();
+        return ResponseEntity.ok(rejectedAllCharge);
+    }
 }

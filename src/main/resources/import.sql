@@ -13,7 +13,7 @@ insert into user (name, lastname, job, floor, phone, mail, account, userType, us
 insert into user (name, lastname, job, floor, phone, mail, account, userType, username, password, create_At) values ('Rocio Fabiola', 'Angulo Velasquez', 'Encargado', '23', '561234', 'fabiola.angulo@bancofie.com.bo', 665123, 'ROLE_MANAGER', 'Encargado 2', '$2a$10$mfIRU2sow.VMXSSrOxuM2uzIEEi9ignZ1oUPzfsh5MS.PyeerVPIm', NOW());
 
 -- Equipo Azul
-insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Azul', 'CCX3', 200.0, 20.0, 31, NOW(), NOW());
+insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Azul', 'CCX3', 200.0, 20.0, 15, NOW(), NOW());
 
 -- Equipo Magenta
 insert into fienaku (name, code, mount, penitence, timespan, create_At, update_At) values ('Equipo Magenta', 'CCX4', 300.0, 30.0, 31, NOW(), NOW());
@@ -27,11 +27,7 @@ insert into fienaku_User (fienaku_Id, user_Id) values (1, 5);
 insert into fienaku_User (fienaku_Id, user_Id) values (1, 6);
 
 insert into fienaku_User (fienaku_Id, user_Id) values (2, 8);
-insert into fienaku_User (fienaku_Id, user_Id) values (2, 2);
-insert into fienaku_User (fienaku_Id, user_Id) values (2, 3);
-insert into fienaku_User (fienaku_Id, user_Id) values (2, 4);
-insert into fienaku_User (fienaku_Id, user_Id) values (2, 5);
-insert into fienaku_User (fienaku_Id, user_Id) values (2, 6);
+
 
 --Pagos
 

@@ -31,18 +31,14 @@ public class fienakuService {
     private final storageService serviceStorage;
 
     /**
-     * Obtiene todos los grupo Fienaku almacenados en la base de datos.
-     *
-     * @return Lista de todos los fienakus
+     * @return Obtiene una lista de lis Fienaku almacenados en la base de datos.
      */
     public List<fienaku> getAll() {
         return repositoryFienaku.findAll();
     }
 
     /**
-     * Obtiene un fienaku por su ID.
-     *
-     * @param id ID del fienaku a obtener
+     * @param id Obtiene un fienaku por su ID.
      * @return El fienaku encontrado
      * @throws RuntimeException si no se encuentra ningún fienaku con el ID
      * especificado
@@ -185,9 +181,11 @@ public class fienakuService {
      * @throws RuntimeException si un fienaku tiene pagos pendientes
      */
     public List<chargeDTO> shuffle() {
+        
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         user manager = repositoryUser.findByUsername(username);
+        
         List<fienaku> users = repositoryFienaku.findByUser(manager);
         List<chargeDTO> registerCharge = new ArrayList<>();
         for (fienaku data : users)
@@ -215,10 +213,7 @@ public class fienakuService {
     }
 
     /**
-     * Agrega un usuario con el codigo de grupo
-     *
-     * @param code for the group code
-     * @return
+     * @param code Agrega un Usuario con el codigo del Fienaku
      */
     @Transactional
     public fienaku getByCode(String code) {
@@ -226,8 +221,6 @@ public class fienakuService {
     }
 
     /**
-     * Guarda un objeto fienaku en la base de datos.
-     *
      * @param fienaku Objeto fienaku a guardar
      */
     @Transactional

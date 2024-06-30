@@ -42,7 +42,7 @@ public class userController {
         List<user> allFienakus = serviceUser.getAll();
         return ResponseEntity.ok(allFienakus);
     }
-
+    @Operation(summary = "List a one user")
     @PostMapping("/{id}")
     public ResponseEntity<user> getOne(@PathVariable Long id) {
         user user = serviceUser.getOne(id);
@@ -56,7 +56,7 @@ public class userController {
         return ResponseEntity.ok(registerUser);
     }
 
-    @Operation(summary = "Edit User")
+    @Operation(summary = "Update User")
     @PostMapping("/update/{id}")
     public ResponseEntity<user> update(@PathVariable Long id, @RequestBody userDTO dto, @RequestPart("file") MultipartFile file) throws IOException {
         user updateUser = serviceUser.update(id, dto, file);

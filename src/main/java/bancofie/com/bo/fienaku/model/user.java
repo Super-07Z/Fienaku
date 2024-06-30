@@ -97,7 +97,7 @@ public class user implements Serializable, UserDetails {
     private List<fienaku> fienaku;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<charge> charge = new ArrayList<>();
+    private List<charge> charge;
       
     @PrePersist
     public void prePersist() {

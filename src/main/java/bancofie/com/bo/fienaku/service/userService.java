@@ -7,6 +7,7 @@ import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.repository.userRepository;
 import bancofie.com.bo.fienaku.upload.storageService;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,18 +16,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class userService {
 
-    private userRepository repositoryUser;
-    private final storageService serviceStorage;
-    private PasswordEncoder passwordEncoder;
-    
     @Autowired
-    public userService(userRepository repositoryUser, storageService serviceStorage, PasswordEncoder passwordEncoder){
-        this.repositoryUser = repositoryUser;
-        this.serviceStorage = serviceStorage;
-        this.passwordEncoder = passwordEncoder;
-   }
+    private userRepository repositoryUser;
+    @Autowired
+    private final storageService serviceStorage;
+    @Autowired
+    private PasswordEncoder passwordEncoder;    
     
     public List<user> getAll() {
         return repositoryUser.findAll();
