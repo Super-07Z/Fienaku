@@ -6,12 +6,14 @@ import java.io.IOException;
 import bancofie.com.bo.fienaku.dto.userDTO;
 import bancofie.com.bo.fienaku.model.user;
 import bancofie.com.bo.fienaku.error.*;
+import bancofie.com.bo.fienaku.exportExcel.userExportExcel;
 import bancofie.com.bo.fienaku.model.fienaku;
 import bancofie.com.bo.fienaku.service.fienakuService;
 import bancofie.com.bo.fienaku.service.userService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +27,13 @@ public class userController {
 
     private final userService serviceUser;
     private final fienakuService serviceFienaku;
+    private final userExportExcel userExportExcel;
 
     @Autowired
-    public userController(userService serviceUser,fienakuService serviceFienaku) {
+    public userController(userService serviceUser,fienakuService serviceFienaku, userExportExcel userExportExcel) {
         this.serviceUser = serviceUser;
         this.serviceFienaku = serviceFienaku;
+        this.userExportExcel = userExportExcel;
     }
 
     @ApiResponses(value =
@@ -62,14 +66,14 @@ public class userController {
     @Operation(summary = "Upload Image")
     @PostMapping(value = "/uploadImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<user> uploadImage(@RequestPart("file") MultipartFile file) throws IOException {
-        user updatedUser = serviceUser.uploadImage(file);
+        user updatedUser = serviceUser.image(file);
         return ResponseEntity.ok(updatedUser);
     }
 
     @Operation(summary = "Upload Image with ID")
     @PostMapping(value = "/uploadImageID/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<user> uploadImageID(@PathVariable Long id, @RequestPart("file") MultipartFile file) throws IOException {
-        user updatedUser = serviceUser.uploadImageId(id,file);
+        user updatedUser = serviceUser.imageId(id,file);
         return ResponseEntity.ok(updatedUser);
     }
     
@@ -86,14 +90,7 @@ public class userController {
         user updatedUser = serviceUser.updateId(id,dto);
         return ResponseEntity.ok(updatedUser);
     }
-    
-    @Operation(summary = "Delete User")
-    @PostMapping("/delete")
-    public ResponseEntity<user> delete(@PathVariable Long id) {
-        serviceUser.delete();
-        return ResponseEntity.noContent().build();
-    }
-    
+       
     @Operation(summary = "Delete User ID")
     @PostMapping("/delete/{id}")
     public ResponseEntity<user> deleteID(@PathVariable Long id) {
@@ -109,4 +106,12 @@ public class userController {
         serviceFienaku.save(fienaku);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Report Excel")
+    @PostMapping("/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        List<user> users = serviceUser.getAll();
+        userExportExcel.export(users, response);
+    }
+
 }

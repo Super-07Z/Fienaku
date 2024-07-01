@@ -3,11 +3,13 @@ package bancofie.com.bo.fienaku.controller;
 import java.util.List;
 import java.io.IOException;
 import bancofie.com.bo.fienaku.error.apiError;
+import bancofie.com.bo.fienaku.exportExcel.chargeExportExcel;
 import bancofie.com.bo.fienaku.model.*;
 import bancofie.com.bo.fienaku.service.chargeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class chargeController {
     
     private final chargeService serviceCharge;
+    private final chargeExportExcel chargeExportExcel;
 
     @Autowired
-    public chargeController(chargeService serviceCharge) {
+    public chargeController(chargeService serviceCharge,chargeExportExcel chargeExportExcel) {
         this.serviceCharge = serviceCharge;
+        this.chargeExportExcel = chargeExportExcel;
     }
     
     @Operation(summary = "get list of all charges")
@@ -79,5 +83,12 @@ public class chargeController {
     public ResponseEntity<List<charge>> rejectedAllCharge() {
         List<charge> rejectedAllCharge = serviceCharge.rejectedAll();
         return ResponseEntity.ok(rejectedAllCharge);
+    }
+    
+    @Operation(summary = "Report Excel")
+    @PostMapping("/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        List<charge> charges = serviceCharge.getAll();
+        chargeExportExcel.export(charges, response);
     }
 }

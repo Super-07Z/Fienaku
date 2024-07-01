@@ -53,8 +53,7 @@ public class userService {
      * @throws RuntimeException si no se encuentra el usuario.
      */
     public user getOne(Long id) {
-        return repositoryUser.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + id));
+        return repositoryUser.findById(id).orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
     /**
@@ -88,7 +87,7 @@ public class userService {
      * @throws IOException si hay un error al procesar el archivo.
      */
     @Transactional
-    public user uploadImage(MultipartFile file) throws IOException {
+    public user image(MultipartFile file) throws IOException {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         user currentUser = repositoryUser.findByUsername(username);
@@ -110,9 +109,8 @@ public class userService {
      * @throws IOException si hay un error al procesar el archivo.
      */
     @Transactional
-    public user uploadImageId(Long userId, MultipartFile file) throws IOException {
-        user currentUser = repositoryUser.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public user imageId(Long userId, MultipartFile file) throws IOException {
+        user currentUser = repositoryUser.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (!file.isEmpty()) {
             String imageUrl = serviceStorage.store(file);
@@ -158,8 +156,7 @@ public class userService {
      */
     @Transactional
     public user updateId(Long userId, userDTO dto) throws IOException {
-        user currentUser = repositoryUser.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user currentUser = repositoryUser.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         currentUser.setName(dto.getName());
         currentUser.setLastname(dto.getLastname());
@@ -174,11 +171,10 @@ public class userService {
      * Elimina un usuario por su ID.
      *
      * @param id ID del usuario a eliminar.
-     * @throws RuntimeException si hay sorteos pendientes asociados a grupos de usuarios.
+     * @throws RuntimeException si hay cobros pendientes asociados a grupos de usuarios.
      */
     public void deleteID(Long id) {
-        user userToDelete = repositoryUser.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        user userToDelete = repositoryUser.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
 
         List<fienaku> fienakus = repositoryFienaku.findByUser(userToDelete);
         for (fienaku group : fienakus) {
@@ -187,27 +183,5 @@ public class userService {
             }
         }
         repositoryUser.deleteById(id);
-    }
-
-    /**
-     * Elimina el usuario autenticado.
-     *
-     * @throws RuntimeException si hay sorteos pendientes asociados a grupos de usuarios.
-     */
-    public void delete() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        user userToDelete = repositoryUser.findByUsername(username);
-
-        List<fienaku> fienakus = repositoryFienaku.findByUser(userToDelete);
-        for (fienaku group : fienakus) {
-            if (repositoryCharge.existsByFienaku(group)) {
-                throw new RuntimeException("Cannot delete user because there are pending charge associated with group " + group.getId());
-            }
-        }
-
-        repositoryUser.deleteById(userToDelete.getId());
-    }
-    
-    
+    }     
 }

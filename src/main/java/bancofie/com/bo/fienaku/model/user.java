@@ -28,28 +28,33 @@ public class user implements Serializable, UserDetails {
     @Schema(description = "User ID", example = "1", type = "long")
     private Long id;
 
-    @Schema(description = "userName", example = "Perez", type = "String")
-    private String username;  
-        
+    @NotBlank
     @Schema(description = "Name", example = "Juan", type = "String")
     private String name;
 
+    @NotBlank
     @Schema(description = "Last Name", example = "Perez", type = "String")
     private String lastname;
   
+    @NotBlank
     @Schema(description = "job", example = "Technological innovation", type = "String")
     private String job;
 
-    @Schema(description = "floor", example = "Piso 23", type = "Integer")
+    @NotBlank
+    @Schema(description = "floor", example = "Piso 23", type = "String")
     private String floor;
     
-    @Schema(description = "phone", example = "78426548", type = "Integer")
+    @NotBlank
+    @Schema(description = "phone", example = "78426548", type = "String")
     private String phone;
               
+    @NotBlank
+    @Email
     @Schema(description = "Mail", example = "juan@email.com", type = "String")
     @Column(unique = true, length = 60)
     private String mail;
     
+    @NotNull
     @Schema(description = "Account", example = "11515143", type = "Integer")
     @Column(unique = true, length = 60)
     private int account;
@@ -61,8 +66,13 @@ public class user implements Serializable, UserDetails {
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     @JoinColumn(name = "userType")
-    private userType usertype;        
+    private userType usertype;
+    
+    @NotBlank
+    @Schema(description = "userName", example = "Perez", type = "String")
+    private String username;        
 
+    @NotBlank
     @JsonIgnore
     @Schema(description = "Password", example = "123", type = "String")
     private String password;
@@ -78,7 +88,7 @@ public class user implements Serializable, UserDetails {
     private Date update;
 
     @JsonBackReference
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "fienaku_User",
             joinColumns = @JoinColumn(name = "user_Id"),
@@ -99,8 +109,12 @@ public class user implements Serializable, UserDetails {
         this.update = new Date();
     }
 
+    public void addFienaku(fienaku fienaku) {
+        this.fienaku.add(fienaku);
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roleName = this.usertype != null ? this.usertype.name() : "USER_ROLE";
+        String roleName = this.usertype != null ? this.usertype.name() : "ROLE_USER";
         return Collections.singleton(new SimpleGrantedAuthority(roleName));
     }
 

@@ -62,6 +62,9 @@ public class fienaku implements Serializable {
     private List<charge> charge;
     
     public void addUser(user data) {
+        if (this.user == null) {
+            this.user = new ArrayList<>();
+        }
         this.user.add(data);
         data.getFienaku().add(this);
     }
