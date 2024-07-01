@@ -61,6 +61,10 @@ public class fienaku implements Serializable {
     @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
     private List<charge> charge;
     
+    @JsonManagedReference
+    @OneToMany(mappedBy = "fienaku", cascade = CascadeType.ALL)
+    private List<paymenth> payments;
+    
     public void addUser(user data) {
         if (this.user == null) {
             this.user = new ArrayList<>();

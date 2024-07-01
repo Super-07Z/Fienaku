@@ -99,6 +99,9 @@ public class user implements Serializable, UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<charge> charge;
       
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<paymenth> payments;
+    
     @PrePersist
     public void prePersist() {
         this.create = new Date();
